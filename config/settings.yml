@@ -1,4 +1,14 @@
 plugins:
-  plugin_name_enabled:
+  onlyoffice_connector_enabled:
     default: true
+    client: true
+
+  onlyoffice_connector_ds_host:
+    default: 'http://localhost'
+    client: true
+  onlyoffice_connector_discourse_host:
+    default: 'http://localhost'
+    client: true
+  onlyoffice_connector_ds_jwt:
+    default: ''
     client: true

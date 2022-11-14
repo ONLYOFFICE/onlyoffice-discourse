@@ -1,1 +1,5 @@
 en:
+  site_settings:
+    onlyoffice_connector_enabled: "Enable ONLYOFICE plugin"
+    onlyoffice_connector_ds_host: "ONLYOFFICE Docs Host"
+    onlyoffice_connector_ds_jwt: "ONLYOFFICE Docs JWT Secret"

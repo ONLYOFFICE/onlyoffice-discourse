@@ -1,4 +1,9 @@
 en:
   js:
-    discourse_plugin_name:
+    onlyoffice_connector:
       placeholder: placeholder
+    onlyoffice_buttons:
+      create: "Create in ONLYOFFICE"
+    onlyoffice_create_form:
+      title: "Create in ONLYOFFICE"
+

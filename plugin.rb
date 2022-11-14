@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
-# name: discourse-plugin-name
+# name: discourse-onlyoffice-connector
 # about: TODO
 # version: 0.0.1
-# authors: Discourse
+# authors: ONLYOFFICE
 # url: TODO
 # required_version: 2.7.0
 
-enabled_site_setting :plugin_name_enabled
+enabled_site_setting :onlyoffice_connector_enabled
 
 after_initialize do
+    module ::Onlyoffice
+        PLUGIN_NAME = "onlyoffice-connector"
+    end
 end
