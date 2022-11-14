@@ -12,6 +12,7 @@ function addOnlyofficeLink(buffer, matches, state) {
   }
 
   token.attrs.push(["class", "onlyoffice-doc-block"]);
+  token.attrs.push(["src", `/onlyoffice/editor/${parsed.attrs.docid}${parsed.attrs["view"] ? "?view=1" : ""}`]);
 
   buffer.push(token);
 
@@ -28,6 +29,7 @@ export function setup(helper) {
   helper.allowList([
     "iframe.onlyoffice-doc-block",
     "iframe[docid]",
+    "iframe[src]",
     "iframe[style]",
     "iframe[view]",
   ]);
