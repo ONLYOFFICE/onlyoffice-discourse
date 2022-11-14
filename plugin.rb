@@ -7,6 +7,7 @@
 # url: TODO
 # required_version: 2.7.0
 
+register_asset "stylesheets/onlyoffice.scss"
 enabled_site_setting :onlyoffice_connector_enabled
 
 after_initialize do
