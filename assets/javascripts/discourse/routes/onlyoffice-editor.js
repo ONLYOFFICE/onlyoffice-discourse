@@ -1,24 +1,27 @@
-import { ajax } from 'discourse/lib/ajax';
+import Route from "@ember/routing/route";
+import { ajax } from "discourse/lib/ajax";
 
-export default Ember.Route.extend({
-
-    queryParams: {
-        view: {
-            refreshModel: true
-        }
+export default class OnlyofficeEditorRoute extends Route {
+  queryParams = {
+    view: {
+      refreshModel: true,
     },
+  };
 
-    model(params) {
-        if (params.view) {
-            return ajax(`/onlyoffice/editor/${params.id}.json?view=1`);
-        } else {
-            return ajax(`/onlyoffice/editor/${params.id}.json`);
-        }
-    },
+  async model(params) {
+    const viewParam = params.view ? "?view=1" : "";
+    const response = await ajax(
+      `/onlyoffice/editor/${params.id}.json${viewParam}`,
+      {
+        type: "GET",
+        dataType: "json",
+      }
+    );
 
-    renderTemplate() {
-        this.render("onlyoffice.editor", {
-            into: "onlyoffice"
-        });
-    },
-});
+    if (typeof response.doc_config === "string") {
+      response.doc_config = JSON.parse(response.doc_config);
+    }
+
+    return response;
+  }
+}
