@@ -1,0 +1,42 @@
+ru:
+  js:
+    onlyoffice_connector:
+      placeholder: placeholder
+    onlyoffice_buttons:
+      create: "Создать в ONLYOFFICE"
+    onlyoffice_create_form:
+      title: "Создать документ ONLYOFFICE"
+      filename_label: "Название документа:"
+      filename_placeholder: "Введите название документа (необязательно)"
+      select_type: "Выберите тип документа:"
+      create_button: "Создать документ"
+      document_type_docx: "Документ"
+      document_type_xlsx: "Таблица"
+      document_type_pptx: "Презентация"
+      document_type_pdf: "PDF"
+    onlyoffice_document:
+      download: "Скачать"
+      view: "Просмотр"
+      edit: "Редактировать"
+    onlyoffice_actions:
+      title: "Действия с документом"
+      select_action: "Выберите действие для этого документа:"
+      download: "Скачать"
+      open: "Открыть в ONLYOFFICE"
+      convert: "Конвертировать"
+      permissions: "Управление правами"
+    onlyoffice_convert:
+      title: "Конвертация документа"
+      select_format: "Выберите целевой формат:"
+      convert_button: "Конвертировать"
+    onlyoffice_permissions:
+      title: "Управление правами доступа"
+      add_user: "Добавить пользователя"
+      search_users: "Поиск пользователей..."
+      permission_type: "Тип прав:"
+      viewer: "Просмотр"
+      editor: "Редактирование"
+      add_button: "Добавить права"
+      current_permissions: "Текущие права"
+      no_permissions: "Права не установлены."
+      remove: "Удалить права"

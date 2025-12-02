@@ -5,5 +5,39 @@ en:
     onlyoffice_buttons:
       create: "Create in ONLYOFFICE"
     onlyoffice_create_form:
-      title: "Create in ONLYOFFICE"
+      title: "Create ONLYOFFICE Document"
+      filename_label: "Document name:"
+      filename_placeholder: "Enter document name (optional)"
+      select_type: "Select document type:"
+      create_button: "Create Document"
+      document_type_docx: "Document"
+      document_type_xlsx: "Spreadsheet"
+      document_type_pptx: "Presentation"
+      document_type_pdf: "PDF"
+    onlyoffice_document:
+      download: "Download"
+      view: "View"
+      edit: "Edit"
+    onlyoffice_actions:
+      title: "Document Actions"
+      select_action: "Choose an action for this document:"
+      download: "Download"
+      open: "Open in ONLYOFFICE"
+      convert: "Convert"
+      permissions: "Manage Permissions"
+    onlyoffice_convert:
+      title: "Convert Document"
+      select_format: "Select target format:"
+      convert_button: "Convert"
+    onlyoffice_permissions:
+      title: "Manage Document Permissions"
+      add_user: "Add User"
+      search_users: "Search users..."
+      permission_type: "Permission type:"
+      viewer: "Viewer"
+      editor: "Editor"
+      add_button: "Add Permission"
+      current_permissions: "Current Permissions"
+      no_permissions: "No permissions set."
+      remove: "Remove permission"
 
