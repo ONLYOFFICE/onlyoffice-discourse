@@ -1,0 +1,43 @@
+<DModal
+  @title={{i18n "onlyoffice_convert.title"}}
+  @closeModal={{@closeModal}}
+  class="onlyoffice-convert-modal"
+>
+  <:body>
+    <div class="onlyoffice-convert-form">
+      <div class="format-selector">
+        <label class="control-label">
+          {{i18n "onlyoffice_convert.select_format"}}
+        </label>
+        <div class="format-options">
+          {{#each this.formatsList as |format|}}
+            <div
+              class="format-option
+                {{if (eq this.selectedFormat format.value) 'selected'}}"
+              role="button"
+              {{on "click" (fn this.selectFormat format.value)}}
+            >
+              <div class="format-label">{{format.label}}</div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </:body>
+
+  <:footer>
+    <DButton
+      @action={{this.convert}}
+      @label="onlyoffice_convert.convert_button"
+      @disabled={{or (not this.selectedFormat) this.isConverting}}
+      @isLoading={{this.isConverting}}
+      class="btn-primary"
+    />
+    <DButton
+      @action={{this.cancel}}
+      @label="cancel"
+      @disabled={{this.isConverting}}
+      class="btn-flat"
+    />
+  </:footer>
+</DModal>

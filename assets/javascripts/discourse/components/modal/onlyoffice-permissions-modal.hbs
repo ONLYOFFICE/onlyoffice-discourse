@@ -1,0 +1,148 @@
+<DModal
+  @title={{i18n "onlyoffice_permissions.title"}}
+  @closeModal={{@closeModal}}
+  class="onlyoffice-permissions-modal"
+>
+  <:body>
+    <div class="onlyoffice-permissions-form">
+      {{#if this.isLoading}}
+        <div class="spinner-container">
+          <span class="spinner"></span>
+        </div>
+      {{else}}
+        <div class="add-permission-section">
+          <h3>{{i18n "onlyoffice_permissions.add_user"}}</h3>
+
+          <div class="user-search">
+            <input
+              type="text"
+              placeholder={{i18n "onlyoffice_permissions.search_users"}}
+              value={{this.searchTerm}}
+              {{on "input" this.handleSearchInput}}
+              class="user-search-input"
+            />
+
+            {{#if this.searchResults.length}}
+              <div class="search-results">
+                {{#each this.searchResults as |user|}}
+                  <div
+                    class="search-result-item"
+                    role="button"
+                    {{on "click" (fn this.selectUser user)}}
+                  >
+                    <img
+                      src={{user.avatar_template}}
+                      alt={{user.username}}
+                      class="avatar"
+                    />
+                    <span class="username">{{user.username}}</span>
+                    {{#if user.name}}
+                      <span class="name">{{user.name}}</span>
+                    {{/if}}
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
+          </div>
+
+          <div class="permission-selector">
+            <label>{{i18n "onlyoffice_permissions.permission_type"}}</label>
+            <div class="permission-options">
+              <button
+                class="permission-option
+                  {{if (eq this.selectedPermission 'viewer') 'selected'}}"
+                type="button"
+                {{on "click" (fn this.setPermission "viewer")}}
+              >
+                <span class="label">{{i18n
+                    "onlyoffice_permissions.viewer"
+                  }}</span>
+              </button>
+              <button
+                class="permission-option
+                  {{if (eq this.selectedPermission 'editor') 'selected'}}"
+                type="button"
+                {{on "click" (fn this.setPermission "editor")}}
+              >
+                <span class="label">{{i18n
+                    "onlyoffice_permissions.editor"
+                  }}</span>
+              </button>
+            </div>
+          </div>
+
+          <DButton
+            @action={{this.addPermission}}
+            @label="onlyoffice_permissions.add_button"
+            @disabled={{not this.selectedUserId}}
+            class="btn-primary add-permission-btn"
+          />
+        </div>
+
+        <div class="permissions-list">
+          <h3>{{i18n "onlyoffice_permissions.current_permissions"}}</h3>
+
+          {{#if this.permissions.length}}
+            <div class="permissions-table">
+              {{#each this.permissions as |permission|}}
+                <div class="permission-row">
+                  <div class="user-info">
+                    <img
+                      src={{permission.user.avatar_template}}
+                      alt={{permission.user.username}}
+                      class="avatar"
+                    />
+                    <div class="user-details">
+                      <span class="username">{{permission.user.username}}</span>
+                      {{#if permission.user.name}}
+                        <span class="name">{{permission.user.name}}</span>
+                      {{/if}}
+                    </div>
+                  </div>
+
+                  <div class="permission-controls">
+                    <select
+                      class="permission-select"
+                      {{on
+                        "change"
+                        (fn this.handlePermissionChange permission.id)
+                      }}
+                    >
+                      <option
+                        value="viewer"
+                        selected={{eq permission.permission_type "viewer"}}
+                      >
+                        {{i18n "onlyoffice_permissions.viewer"}}
+                      </option>
+                      <option
+                        value="editor"
+                        selected={{eq permission.permission_type "editor"}}
+                      >
+                        {{i18n "onlyoffice_permissions.editor"}}
+                      </option>
+                    </select>
+
+                    <DButton
+                      @action={{fn this.removePermission permission.id}}
+                      @icon="trash-can"
+                      class="btn-danger btn-icon"
+                      title={{i18n "onlyoffice_permissions.remove"}}
+                    />
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="no-permissions">{{i18n
+                "onlyoffice_permissions.no_permissions"
+              }}</p>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  </:body>
+
+  <:footer>
+    <DButton @action={{this.cancel}} @label="close" class="btn-flat" />
+  </:footer>
+</DModal>

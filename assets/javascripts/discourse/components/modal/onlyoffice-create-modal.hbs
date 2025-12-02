@@ -1,0 +1,64 @@
+<DModal
+  @title={{i18n "onlyoffice_create_form.title"}}
+  @closeModal={{@closeModal}}
+  class="onlyoffice-create-modal"
+>
+  <:body>
+    <div class="onlyoffice-create-form">
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "onlyoffice_create_form.filename_label"}}
+        </label>
+        <input
+          type="text"
+          value={{this.filename}}
+          placeholder={{i18n "onlyoffice_create_form.filename_placeholder"}}
+          {{on "input" this.updateFilename}}
+          class="onlyoffice-filename-input"
+        />
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">
+          {{i18n "onlyoffice_create_form.select_type"}}
+        </label>
+        <div class="document-type-selector">
+          {{#each this.documentTypes as |docType|}}
+            <div
+              class="document-type-option
+                {{if (eq this.selectedType docType.value) 'selected'}}"
+              role="button"
+              {{on "click" (fn this.selectType docType.value)}}
+            >
+              <div class="document-type-icon">
+                <img
+                  src={{this.getIconUrl docType.type}}
+                  alt={{docType.type}}
+                />
+              </div>
+              <div class="document-type-label">
+                {{docType.label}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </:body>
+
+  <:footer>
+    <DButton
+      @action={{this.create}}
+      @label="onlyoffice_create_form.create_button"
+      @disabled={{this.isCreating}}
+      @isLoading={{this.isCreating}}
+      class="btn-primary"
+    />
+    <DButton
+      @action={{this.cancel}}
+      @label="cancel"
+      @disabled={{this.isCreating}}
+      class="btn-flat"
+    />
+  </:footer>
+</DModal>

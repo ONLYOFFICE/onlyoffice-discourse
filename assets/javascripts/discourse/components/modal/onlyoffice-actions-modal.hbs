@@ -1,0 +1,46 @@
+<DModal
+  @title={{i18n "onlyoffice_actions.title"}}
+  @closeModal={{@closeModal}}
+  class="onlyoffice-actions-modal"
+>
+  <:body>
+    <div class="onlyoffice-actions-form">
+      <div class="file-info">
+        <div class="file-icon">
+          <img src={{this.fileIconUrl}} alt={{this.documentType}} />
+        </div>
+        <div class="file-details">
+          <div class="file-name">{{this.filename}}</div>
+          <div class="file-extension">{{this.extension}}</div>
+        </div>
+      </div>
+
+      <div class="actions-list">
+        <p class="actions-description">
+          {{i18n "onlyoffice_actions.select_action"}}
+        </p>
+
+        <div class="action-buttons">
+          {{#each this.availableActions as |action|}}
+            <DButton
+              @action={{fn this.performAction action.id}}
+              @icon={{action.icon}}
+              @label={{concat "onlyoffice_actions." action.id}}
+              @disabled={{this.isProcessing}}
+              class={{concat "btn-action " action.class}}
+            />
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </:body>
+
+  <:footer>
+    <DButton
+      @action={{this.cancel}}
+      @label="cancel"
+      @disabled={{this.isProcessing}}
+      class="btn-flat"
+    />
+  </:footer>
+</DModal>
