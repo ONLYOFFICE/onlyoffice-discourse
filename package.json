@@ -1,10 +1,33 @@
 {
-  "name": "discourse-plugin-name",
-  "version": "0.0.1",
-  "repository": "TODO",
-  "author": "Discourse",
-  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "prepare": "lefthook install",
+    "lint": "concurrently \"pnpm:lint:*(!fix)\" \"pnpm:lint:ruby\"",
+    "lint:js": "eslint assets/javascripts",
+    "lint:hbs": "ember-template-lint assets/javascripts",
+    "lint:css": "stylelint assets/stylesheets/**/*.scss",
+    "lint:ruby": "bundle exec rubocop",
+    "lint:fix": "pnpm lint:js:fix && pnpm lint:hbs:fix && pnpm lint:css:fix && pnpm format && bundle exec rubocop -a",
+    "lint:js:fix": "eslint assets/javascripts --fix",
+    "lint:hbs:fix": "ember-template-lint assets/javascripts --fix",
+    "lint:css:fix": "stylelint assets/stylesheets/**/*.scss --fix",
+    "format": "prettier --write assets/javascripts/**/*.{js,hbs} assets/stylesheets/**/*.scss",
+    "format:check": "prettier --check assets/javascripts/**/*.{js,hbs} assets/stylesheets/**/*.scss"
+  },
   "devDependencies": {
-    "eslint-config-discourse": "^3.1.0"
-  }
+    "@discourse/lint-configs": "2.32.0",
+    "@evilmartians/lefthook": "^1.10.1",
+    "concurrently": "^9.1.0",
+    "ember-template-lint": "7.9.1",
+    "eslint": "9.37.0",
+    "prettier": "3.6.2",
+    "stylelint": "16.25.0"
+  },
+  "engines": {
+    "node": ">= 22",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "9.x"
+  },
+  "packageManager": "pnpm@9.15.5"
 }

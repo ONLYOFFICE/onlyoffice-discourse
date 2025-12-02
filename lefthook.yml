@@ -1,0 +1,27 @@
+pre-commit:
+  parallel: true
+  commands:
+    ruby-lint:
+      glob: "*.rb"
+      run: bundle exec rubocop {staged_files}
+    
+    js-lint:
+      glob: "*.js"
+      run: pnpm eslint {staged_files}
+    
+    hbs-lint:
+      glob: "*.hbs"
+      run: pnpm ember-template-lint {staged_files}
+    
+    css-lint:
+      glob: "*.scss"
+      run: pnpm stylelint {staged_files}
+    
+    prettier:
+      glob: "*.{js,hbs,scss}"
+      run: pnpm prettier --check {staged_files}
+
+pre-push:
+  commands:
+    lint-all:
+      run: pnpm lint
