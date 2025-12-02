@@ -1,5 +1,462 @@
 @import "editor";
 
+// Common variables
+$onlyoffice-border-radius: 8px;
+$onlyoffice-border-radius-lg: 12px;
+$onlyoffice-gap: 0.75rem;
+$onlyoffice-gap-lg: 1rem;
+$onlyoffice-padding: 1rem;
+$onlyoffice-padding-lg: 1.5rem;
+
+// Common mixins
+@mixin flex-center($gap: $onlyoffice-gap) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+}
+
+@mixin card-base {
+  padding: $onlyoffice-padding;
+  border: 1px solid var(--primary-low);
+  border-radius: $onlyoffice-border-radius;
+  background: var(--secondary);
+}
+
 .onlyoffice-doc-block {
-    border: 0;
+  border: 0;
+}
+
+.onlyoffice-actions-modal {
+  .onlyoffice-actions-form {
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: $onlyoffice-padding;
+      background: var(--primary-very-low);
+      border-radius: $onlyoffice-border-radius;
+      margin-bottom: 1.5rem;
+
+      .file-icon {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-low);
+        border-radius: $onlyoffice-border-radius;
+
+        img {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      .file-details {
+        flex: 1;
+        min-width: 0;
+
+        .file-name {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--primary);
+          margin-bottom: 0.25rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .file-extension {
+          font-size: 0.875rem;
+          color: var(--primary-medium);
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .actions-list {
+      .actions-description {
+        font-size: 0.9375rem;
+        color: var(--primary-high);
+        margin-bottom: 1rem;
+      }
+
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: $onlyoffice-gap;
+
+        .btn-action {
+          width: 100%;
+          justify-content: flex-start;
+          padding: 0.75rem 1rem;
+          font-size: 0.9375rem;
+          font-weight: 500;
+          border-radius: 6px;
+          transition: all 0.2s ease;
+
+          .d-icon {
+            margin-right: 0.5rem;
+          }
+
+          &.btn-primary {
+            background: var(--primary);
+            color: var(--secondary);
+            border: 1px solid var(--primary);
+
+            &:hover {
+              background: var(--primary-high);
+              border-color: var(--primary-high);
+            }
+          }
+
+          &.btn-default {
+            background: var(--secondary);
+            color: var(--primary);
+            border: 1px solid var(--primary-low);
+
+            &:hover {
+              background: var(--primary-very-low);
+              border-color: var(--primary-medium);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.onlyoffice-create-modal {
+  .onlyoffice-create-form {
+    .onlyoffice-filename-input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--primary-low);
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-low);
+      }
+
+      &::placeholder {
+        color: var(--primary-low-mid);
+      }
+    }
+
+    .document-type-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+
+      .document-type-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem 1rem;
+        border: 2px solid var(--primary-low);
+        border-radius: $onlyoffice-border-radius;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--secondary);
+
+        &:hover {
+          border-color: var(--primary-medium);
+          background: var(--primary-very-low);
+        }
+
+        &.selected {
+          border-color: var(--primary);
+          background: var(--primary-very-low);
+          box-shadow: 0 0 0 2px var(--primary-low);
+        }
+
+        .document-type-icon {
+          margin-bottom: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+
+        .document-type-label {
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-align: center;
+          color: var(--primary);
+        }
+      }
+    }
+
+    .alert {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.onlyoffice-convert-modal {
+  .onlyoffice-convert-form {
+    .format-selector {
+      .control-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--primary);
+      }
+
+      .format-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: $onlyoffice-gap;
+        overflow-y: auto;
+
+        .format-option {
+          padding: $onlyoffice-padding;
+          border: 2px solid var(--primary-low);
+          border-radius: $onlyoffice-border-radius;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: var(--secondary);
+
+          &:hover {
+            border-color: var(--primary-medium);
+            background: var(--primary-very-low);
+          }
+
+          &.selected {
+            border-color: var(--primary);
+            background: var(--primary-very-low);
+            box-shadow: 0 0 0 2px var(--primary-low);
+          }
+
+          .format-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+          }
+        }
+      }
+    }
+  }
+}
+
+.onlyoffice-permissions-modal {
+  .onlyoffice-permissions-form {
+    .add-permission-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--primary-low);
+      border-radius: $onlyoffice-border-radius;
+
+      h3 {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+
+      .user-search {
+        position: relative;
+        margin-bottom: 1rem;
+
+        .user-search-input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid var(--primary-low);
+          border-radius: 4px;
+        }
+
+        .search-results {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: var(--secondary);
+          border: 1px solid var(--primary-low);
+          border-radius: 4px;
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+          margin-top: 4px;
+          box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+
+          .search-result-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            gap: $onlyoffice-gap;
+
+            &:hover {
+              background: var(--primary-very-low);
+            }
+
+            .avatar {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+            }
+
+            .username {
+              font-weight: 600;
+            }
+
+            .name {
+              color: var(--primary-medium);
+              font-size: 0.875rem;
+            }
+          }
+        }
+      }
+
+      .permission-selector {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .permission-options {
+          display: flex;
+          gap: $onlyoffice-gap;
+
+          .permission-option {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: $onlyoffice-padding;
+            border: 2px solid var(--primary-low);
+            border-radius: $onlyoffice-border-radius;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--secondary);
+
+            &:hover {
+              border-color: var(--primary-medium);
+              background: var(--primary-very-low);
+            }
+
+            &.selected {
+              border-color: var(--primary);
+              background: var(--primary-very-low);
+              box-shadow: 0 0 0 2px var(--primary-low);
+            }
+
+            .icon {
+              font-size: 1.5rem;
+              margin-bottom: 0.5rem;
+            }
+
+            .label {
+              font-size: 0.875rem;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+
+      .add-permission-btn {
+        width: 100%;
+      }
+    }
+
+    .permissions-list {
+      h3 {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+
+      .no-permissions {
+        text-align: center;
+        color: var(--primary-medium);
+        padding: 2rem;
+        font-style: italic;
+      }
+
+      .permissions-table {
+        .permission-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: $onlyoffice-padding;
+          border: 1px solid var(--primary-low);
+          border-radius: $onlyoffice-border-radius;
+          margin-bottom: 0.5rem;
+          gap: 1rem;
+
+          .user-info {
+            display: flex;
+            align-items: center;
+            gap: $onlyoffice-gap;
+            margin-bottom: 0;
+
+            .avatar {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+            }
+
+            .user-details {
+              display: flex;
+              flex-direction: column;
+
+              .username {
+                font-weight: 600;
+              }
+
+              .name {
+                font-size: 0.875rem;
+                color: var(--primary-medium);
+              }
+            }
+          }
+
+          .permission-controls {
+            display: flex;
+            align-items: center;
+            gap: $onlyoffice-gap;
+
+            .permission-select {
+              padding: 0.5rem 0.75rem;
+              border: 1px solid var(--primary-low);
+              border-radius: 4px;
+              background: var(--secondary);
+              height: 36px;
+              margin-bottom: 0;
+            }
+
+            .btn-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-width: 36px;
+              height: 36px;
+              padding: 0;
+              flex-shrink: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+  }
 }
