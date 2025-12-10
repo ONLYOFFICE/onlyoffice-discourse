@@ -44,12 +44,13 @@ after_initialize do
     end
     
     Onlyoffice.update_authorized_extensions if SiteSetting.onlyoffice_connector_auto_authorize_extensions
-    
-    require_relative "app/controllers/onlyoffice_controller.rb"
-    require_relative "lib/onlyoffice_conversion_service.rb"
-    require_relative "lib/onlyoffice_controller_extensions.rb"
-    require_relative "app/models/onlyoffice_permission.rb"
-    
+
+    require_relative "lib/onlyoffice_discourse/onlyoffice_jwt.rb"
+    require_relative "lib/onlyoffice_discourse/onlyoffice_conversion_service.rb"
+    require_relative "lib/onlyoffice_discourse/onlyoffice_controller_extensions.rb"
+    require_relative "app/models/onlyoffice_discourse/onlyoffice_permission.rb"
+    require_relative "app/controllers/onlyoffice_discourse/onlyoffice_controller.rb"
+
     # Include controller extensions for development mode class reloading
     Onlyoffice::OnlyofficeController.class_eval do
       include Onlyoffice::ControllerExtensions

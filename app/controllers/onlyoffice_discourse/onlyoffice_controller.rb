@@ -7,12 +7,10 @@ require "openssl"
 require "tempfile"
 require "zip"
 require "securerandom"
-require_relative "../../lib/onlyoffice_jwt"
-require_relative "../../lib/onlyoffice_controller_extensions"
 
 class Onlyoffice::OnlyofficeController < ::ApplicationController
     include Onlyoffice::ControllerExtensions
-    
+
     requires_login except: [:callback, :formats, :editor]
     protect_from_forgery except: [:callback, :formats]
     skip_before_action :verify_authenticity_token, only: [:callback, :formats]
@@ -20,10 +18,10 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     skip_before_action :check_xhr, only: [:formats, :editor, :callback, :convert]
     skip_before_action :preload_json, only: [:callback]
     skip_before_action :redirect_to_profile_if_required, only: [:callback]
-    
+
     def formats
-        formats_file = File.join(File.dirname(__FILE__), "..", "..", "assets", "document_formats", "onlyoffice-docs-formats.json")
-        
+        formats_file = File.join(File.dirname(__FILE__), "..", "..", "..", "assets", "document_formats", "onlyoffice-docs-formats.json")
+
         if File.exist?(formats_file)
             render plain: File.read(formats_file), content_type: 'application/json'
         else
@@ -53,47 +51,47 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             else
                 ""
             end
-            
+
             filename = if safe_filename.present?
                 "#{safe_filename}.#{document_type}"
             else
                 "document_#{Time.now.strftime('%Y%m%d_%H%M%S')}.#{document_type}"
             end
-            
+
             # Create temp file with correct filename
             temp_dir = Dir.tmpdir
             temp_path = File.join(temp_dir, filename)
-            
+
             # Make file unique by modifying metadata
+            unique_id = SecureRandom.uuid
+            timestamp = Time.now.iso8601
+
             if ['docx', 'xlsx', 'pptx'].include?(document_type)
                 # Office files are ZIP archives - modify core properties to make each file unique
-                unique_id = SecureRandom.uuid
-                timestamp = Time.now.iso8601
-                
                 # Copy template
                 FileUtils.cp(template_path, temp_path)
-                
+
                 begin
                     # Modify the core.xml properties to make file unique
                     Zip::File.open(temp_path) do |zip_file|
                         core_props_path = 'docProps/core.xml'
-                        
+
                         if zip_file.find_entry(core_props_path)
                             # Read existing core properties
                             core_xml = zip_file.read(core_props_path)
-                            
+
                             # Update created/modified timestamps and add unique identifier
-                            core_xml = core_xml.gsub(/<dcterms:created[^>]*>.*?<\/dcterms:created>/, 
+                            core_xml = core_xml.gsub(/<dcterms:created[^>]*>.*?<\/dcterms:created>/,
                                                      "<dcterms:created xsi:type=\"dcterms:W3CDTF\">#{timestamp}</dcterms:created>")
-                            core_xml = core_xml.gsub(/<dcterms:modified[^>]*>.*?<\/dcterms:modified>/, 
+                            core_xml = core_xml.gsub(/<dcterms:modified[^>]*>.*?<\/dcterms:modified>/,
                                                      "<dcterms:modified xsi:type=\"dcterms:W3CDTF\">#{timestamp}</dcterms:modified>")
-                            
+
                             # Add unique identifier as subject if not exists
                             if core_xml.exclude?('<dc:subject>')
                                 core_xml = core_xml.gsub('</cp:coreProperties>',
                                     "<dc:subject>discourse-#{unique_id}</dc:subject></cp:coreProperties>")
                             end
-                            
+
                             # Write back modified XML
                             zip_file.get_output_stream(core_props_path) { |f| f.write(core_xml) }
                         end
@@ -102,10 +100,26 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
                     Rails.logger.error("Failed to modify Office file metadata: #{e.message}")
                     # If modification fails, use template as is (will be deduplicated)
                 end
-            else
-                # For PDF, just copy the template
+            elsif document_type == 'pdf'
+                # For PDF, append unique metadata to make each file unique
+                # Read template content
+                pdf_content = File.binread(template_path)
+                
+                # Add unique XMP metadata comment at the end of PDF
+                # This doesn't affect PDF rendering but makes the file unique
+                unique_metadata = "\n%discourse-id:#{unique_id}\n%timestamp:#{timestamp}\n%%EOF\n"
+                
+                # Write modified PDF
                 File.open(temp_path, 'wb') do |f|
-                    f.write(File.read(template_path))
+                    # Remove trailing %%EOF if present and add our metadata before new %%EOF
+                    if pdf_content.end_with?("%%EOF\n")
+                        f.write(pdf_content.chomp("%%EOF\n"))
+                    elsif pdf_content.end_with?("%%EOF")
+                        f.write(pdf_content.chomp("%%EOF"))
+                    else
+                        f.write(pdf_content)
+                    end
+                    f.write(unique_metadata)
                 end
             end
 
@@ -130,10 +144,10 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
 
     def editor
         upload_id = params[:id].to_s.sub(/\.json$/, '')
-        
+
         if request.format.json?
             upload = find_upload_by_short_url(upload_id)
-            
+
             # Determine access mode based on user permissions
             if current_user.nil?
                 # Anonymous users can only view
@@ -149,19 +163,19 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             PrettyText::Helpers.lookup_upload_urls([upload_id]).each do |short_url, paths|
                 file_url << paths[:url]
             end
-            
+
             # Get file extension from upload object
             file_extension = upload.extension || File.extname(file_url).delete('.').downcase
             file_extension = File.extname(upload_id).delete('.').downcase if file_extension.blank?
-            
+
             # Get filename from upload object
             file_title = upload.original_filename || File.basename(file_url)
-            
+
             # Validate extension
             if file_extension.blank?
                 return render json: { error: "Cannot determine file type" }, status: :bad_request
             end
-            
+
             document_type = case file_extension
                 when 'doc', 'docx', 'docm', 'dot', 'dotx', 'dotm', 'odt', 'fodt', 'ott', 'rtf', 'txt', 'html', 'htm', 'mht', 'pdf', 'djvu', 'fb2', 'epub', 'xps'
                     'word'
@@ -176,7 +190,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             # Generate unique key for document version
             # Include upload timestamp to force reload when file is updated
             doc_key = "#{upload_id}_#{upload.updated_at.to_i}"
-            
+
             doc_config = {
                 type: "desktop",
                 documentType: document_type,
@@ -227,19 +241,19 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             render json: { error: 0 }
             return
         end
-        
+
         file_data = read_callback_body
-        
+
         if file_data.nil?
             render json: { error: 1, message: "Invalid request" }, status: :bad_request
             return
         end
-        
+
         response_json = {
             error: 0,
             message: ""
         }
-        
+
         begin
             upload_id = params[:id].to_s.sub(/\.json$/, '')
             status = file_data["status"].to_i
@@ -282,14 +296,14 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     def read_callback_body
         body = request.body.read
         return nil if body.blank?
-        
+
         file_data = JSON.parse(body)
-        
+
         if Onlyoffice::OnlyofficeJwt.enabled?
             in_header = false
             token = nil
             jwt_header = SiteSetting.onlyoffice_connector_jwt_header || 'Authorization'
-            
+
             if file_data['token']
                 token = Onlyoffice::OnlyofficeJwt.decode(file_data['token'])
             elsif request.headers[jwt_header]
@@ -300,13 +314,13 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             else
                 raise 'Expected JWT'
             end
-            
+
             raise 'Invalid JWT signature' if token.nil? || token == ''
-            
+
             file_data = JSON.parse(token)
             file_data = file_data['payload'] if in_header
         end
-        
+
         file_data
     rescue => e
         Rails.logger.error("JWT validation failed: #{e.message}")
@@ -321,62 +335,62 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     def process_save(data, upload_id)
         upload_id = upload_id.to_s.sub(/\.json$/, '')
         download_uri = data["url"]
-        
+
         return 1 if download_uri.blank?
-        
+
         file_content = download_file_from_onlyoffice(download_uri)
         return 1 unless file_content
-        
+
         save_file_to_upload(upload_id, file_content)
     rescue => e
         Rails.logger.error("ONLYOFFICE: Document save failed - #{e.class}: #{e.message}")
         1
     end
-    
+
     def download_file_from_onlyoffice(download_uri)
         # Replace ONLYOFFICE internal IP with configured host
         internal_host = SiteSetting.onlyoffice_connector_ds_internal_host
         if internal_host.present? && download_uri =~ %r{^https?://[\d.]+[:/]}
             download_uri = download_uri.sub(%r{^https?://[\d.]+}, internal_host.sub(%r{/$}, ''))
         end
-        
+
         uri = URI.parse(download_uri)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == 'https'
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE if uri.scheme == 'https'
         http.open_timeout = 10
         http.read_timeout = 30
-        
+
         response = http.request(Net::HTTP::Get.new(uri.request_uri))
-        
+
         unless response.is_a?(Net::HTTPSuccess)
             Rails.logger.error("ONLYOFFICE: Failed to download file - HTTP #{response.code}")
             return nil
         end
-        
+
         file_content = response.body
         (file_content.presence)
     end
-    
+
     def save_file_to_upload(upload_id, file_content)
         sha1 = find_sha1_from_upload_id(upload_id)
         unless sha1
             Rails.logger.error("ONLYOFFICE: Could not find SHA1 for upload: #{upload_id}")
             return 1
         end
-        
+
         upload = Upload.find_by(sha1: sha1)
         unless upload
             Rails.logger.error("ONLYOFFICE: Could not find upload with SHA1: #{sha1}")
             return 1
         end
-        
+
         path = Discourse.store.path_for(upload)
         unless path && File.exist?(path)
             Rails.logger.error("ONLYOFFICE: File path not found: #{path}")
             return 1
         end
-        
+
         File.binwrite(path, file_content)
         upload.update!(filesize: file_content.bytesize)
         0
@@ -385,7 +399,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     def process_force_save(data, upload_id)
         process_save(data, upload_id)
     end
-    
+
     def find_sha1_from_upload_id(upload_id)
         [upload_id, upload_id.sub(/\.[^.]+$/, '')].each do |id|
             PrettyText::Helpers.lookup_upload_urls([id]).each do |_, info|
@@ -396,7 +410,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     end
 
     def get_template_path(locale, document_type)
-        plugin_path = File.expand_path("../../..", __FILE__)
+        plugin_path = File.expand_path("../../../..", __FILE__)
         templates_dir = File.join(plugin_path, "assets", "document_templates")
         normalized_locale = normalize_locale(locale)
 
@@ -405,7 +419,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
 
         base_locale = locale.split("-").first
         base_locale_dirs = Dir.glob(File.join(templates_dir, "#{base_locale}-*"))
-        
+
         base_locale_dirs.each do |dir|
             path = File.join(dir, "new.#{document_type}")
             return path if File.exist?(path)
@@ -423,13 +437,13 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             "zh_TW" => "zh-TW",
             "nb_NO" => "nb-NO"
         }
-        
+
         return special_cases[locale] if special_cases.key?(locale)
-        
+
         # Standard pattern: "en" => "en-US", "ru" => "ru-RU", etc.
         # If locale already has format "xx-YY", return as is
         return locale if locale.include?("-")
-        
+
         # Convert "en" to "en-US" pattern
         country_codes = {
             "en" => "US", "ru" => "RU", "de" => "DE", "fr" => "FR", "es" => "ES",
@@ -439,7 +453,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
             "bg" => "BG", "sk" => "SK", "el" => "GR", "vi" => "VN", "id" => "ID",
             "ms" => "MY", "th" => "TH"
         }
-        
+
         country = country_codes[locale] || locale.upcase
         "#{locale}-#{country}"
     end
