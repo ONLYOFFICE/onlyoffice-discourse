@@ -3,6 +3,7 @@
 source "https://rubygems.org"
 
 gem "jwt"
+gem "rubyzip"
 
 group :development do
   gem "rubocop-discourse"

@@ -83,6 +83,7 @@ GEM
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
     ruby-progressbar (1.13.0)
+    rubyzip (2.4.1)
     securerandom (0.4.1)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
@@ -99,6 +100,7 @@ PLATFORMS
 DEPENDENCIES
   jwt
   rubocop-discourse
+  rubyzip
   syntax_tree
 
 BUNDLED WITH
