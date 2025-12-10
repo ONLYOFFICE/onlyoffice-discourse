@@ -77,7 +77,7 @@ export default class OnlyofficeActionsModal extends Component {
 
   get fileIconUrl() {
     return getURLWithCDN(
-      `/plugins/onlyoffice-discourse/images/file_${this.documentType}.svg`
+      `/plugins/onlyoffice-discourse/images/file_${this.documentType}.svg`,
     );
   }
 

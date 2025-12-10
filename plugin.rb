@@ -21,11 +21,11 @@ after_initialize do
     module ::Onlyoffice
         PLUGIN_NAME = "onlyoffice-discourse"
         PLUGIN_ROOT = File.dirname(__FILE__)
-        
+
         def self.update_authorized_extensions
             formats_file = File.join(PLUGIN_ROOT, "assets", "document_formats", "onlyoffice-docs-formats.json")
             fallback_extensions = %w[docx xlsx pptx pdf doc xls ppt odt ods odp rtf]
-            
+
             extensions = if File.exist?(formats_file)
                 begin
                     JSON.parse(File.read(formats_file)).map { |f| f["name"] }.compact.uniq
@@ -36,13 +36,13 @@ after_initialize do
             else
                 fallback_extensions
             end
-            
+
             current = SiteSetting.authorized_extensions.split("|").map(&:strip)
             extensions.each { |ext| current << ext if current.exclude?(ext) }
             SiteSetting.authorized_extensions = current.join("|")
         end
     end
-    
+
     Onlyoffice.update_authorized_extensions if SiteSetting.onlyoffice_connector_auto_authorize_extensions
 
     require_relative "lib/onlyoffice_discourse/onlyoffice_jwt.rb"
@@ -55,7 +55,7 @@ after_initialize do
     Onlyoffice::OnlyofficeController.class_eval do
       include Onlyoffice::ControllerExtensions
     end
-    
+
     class Onlyoffice::Engine < Rails::Engine
         engine_name Onlyoffice::PLUGIN_NAME
         isolate_namespace Onlyoffice

@@ -15,7 +15,7 @@ async function loadFormats() {
 
     const formats = Array.isArray(response) ? response : response.formats || [];
     formats.forEach((format) =>
-      formatsMap.set(format.name.toLowerCase(), format)
+      formatsMap.set(format.name.toLowerCase(), format),
     );
 
     window.onlyofficeFormatsMap = formatsMap;
@@ -82,7 +82,7 @@ export default {
 
         // Skip if attachment is in composer (unsent message)
         const isInComposer = target.closest(
-          "#reply-control, .d-editor-preview"
+          "#reply-control, .d-editor-preview",
         );
         if (isInComposer) {
           return;
@@ -109,7 +109,7 @@ export default {
 
         try {
           const response = await ajax(
-            `/onlyoffice/upload-info/${uploadInfo.uploadShortUrl}`
+            `/onlyoffice/upload-info/${uploadInfo.uploadShortUrl}`,
           );
           container.lookup("service:modal").show(OnlyofficeActionsModal, {
             model: {

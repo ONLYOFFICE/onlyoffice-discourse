@@ -42,7 +42,7 @@ export default class OnlyofficeCreateModal extends Component {
 
   getIconUrl(type) {
     return getURLWithCDN(
-      `/plugins/onlyoffice-discourse/images/file_${type}.svg`
+      `/plugins/onlyoffice-discourse/images/file_${type}.svg`,
     );
   }
 

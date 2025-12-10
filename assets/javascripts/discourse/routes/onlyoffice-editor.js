@@ -15,7 +15,7 @@ export default class OnlyofficeEditorRoute extends Route {
       {
         type: "GET",
         dataType: "json",
-      }
+      },
     );
 
     if (typeof response.doc_config === "string") {

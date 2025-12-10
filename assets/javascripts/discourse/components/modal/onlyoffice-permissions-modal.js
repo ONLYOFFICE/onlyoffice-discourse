@@ -140,7 +140,7 @@ export default class OnlyofficePermissionsModal extends Component {
             permission_type: newType,
             post_id: this.postId,
           },
-        }
+        },
       );
 
       await this.loadPermissions();
