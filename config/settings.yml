@@ -3,23 +3,19 @@ plugins:
     default: true
     client: true
 
-  onlyoffice_connector_ds_host:
+  ONLYOFFICE_Docs_address:
     default: 'http://localhost'
     client: true
-    description: 'OnlyOffice Document Server URL for client browser connections'
-  onlyoffice_connector_ds_internal_host:
-    default: 'http://localhost'
-    description: 'OnlyOffice Document Server URL for internal server-to-server requests (conversions, callbacks). Use localhost if Document Server is on the same machine.'
-  onlyoffice_connector_discourse_host:
-    default: 'http://localhost'
-    client: true
-  onlyoffice_connector_ds_jwt:
+  ONLYOFFICE_Docs_secret_key:
     default: ''
     client: true
-  onlyoffice_connector_jwt_header:
+  JWT_header:
     default: 'Authorization'
     client: true
-    description: 'JWT header name for OnlyOffice Document Server authentication (default: Authorization)'
-  onlyoffice_connector_auto_authorize_extensions:
+  ONLYOFFICE_Docs_address_for_internal_requests_from_the_server:
+    default: 'http://localhost'
+  Server_address_for_internal_requests_from_ONLYOFFICE_Docs:
+    default: 'http://localhost'
+    client: true
+  ONLYOFFICE_connector_auto_authorize_extensions:
     default: true
-    description: 'Automatically add office file extensions (docx, xlsx, pptx, pdf, etc.) to authorized_extensions'

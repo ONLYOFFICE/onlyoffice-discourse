@@ -12,7 +12,7 @@ register_svg_icon "onlyoffice-logo"
 enabled_site_setting :onlyoffice_connector_enabled
 
 on(:site_setting_changed) do |name, _old_value, new_value|
-    if name == :onlyoffice_connector_auto_authorize_extensions && new_value == true
+    if name == :ONLYOFFICE_connector_auto_authorize_extensions && new_value == true
         Onlyoffice.update_authorized_extensions
     end
 end
@@ -43,7 +43,7 @@ after_initialize do
         end
     end
 
-    Onlyoffice.update_authorized_extensions if SiteSetting.onlyoffice_connector_auto_authorize_extensions
+    Onlyoffice.update_authorized_extensions if SiteSetting.ONLYOFFICE_connector_auto_authorize_extensions
 
     require_relative "lib/onlyoffice_discourse/onlyoffice_jwt.rb"
     require_relative "lib/onlyoffice_discourse/onlyoffice_conversion_service.rb"

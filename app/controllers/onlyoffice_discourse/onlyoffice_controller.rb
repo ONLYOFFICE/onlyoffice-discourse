@@ -196,7 +196,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
                 documentType: document_type,
                 document: {
                     title: file_title,
-                    url: SiteSetting.onlyoffice_connector_discourse_host + file_url,
+                    url: SiteSetting.Server_address_for_internal_requests_from_ONLYOFFICE_Docs + file_url,
                     fileType: file_extension,
                     key: doc_key,
                     permissions: {
@@ -206,7 +206,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
                 editorConfig: {
                     mode: is_view ? "view" : "edit",
                     lang: get_user_locale,
-                    callbackUrl: "#{SiteSetting.onlyoffice_connector_discourse_host}/onlyoffice/callback/#{upload_id}",
+                    callbackUrl: "#{SiteSetting.Server_address_for_internal_requests_from_ONLYOFFICE_Docs}/onlyoffice/callback/#{upload_id}",
                     user: current_user ? {
                         id: current_user.id,
                         name: current_user.name ? current_user.name : current_user.username,
@@ -226,7 +226,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
 
             render json: {
                 config: {
-                    ds_host: SiteSetting.onlyoffice_connector_ds_host,
+                    ds_host: SiteSetting.ONLYOFFICE_Docs_address,
                 },
                 id: params[:id],
                 doc_config: doc_config
@@ -302,7 +302,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
         if Onlyoffice::OnlyofficeJwt.enabled?
             in_header = false
             token = nil
-            jwt_header = SiteSetting.onlyoffice_connector_jwt_header || 'Authorization'
+            jwt_header = SiteSetting.JWT_header || 'Authorization'
 
             if file_data['token']
                 token = Onlyoffice::OnlyofficeJwt.decode(file_data['token'])
@@ -349,7 +349,7 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
 
     def download_file_from_onlyoffice(download_uri)
         # Replace ONLYOFFICE internal IP with configured host
-        internal_host = SiteSetting.onlyoffice_connector_ds_internal_host
+        internal_host = SiteSetting.ONLYOFFICE_Docs_address_for_internal_requests_from_the_server
         if internal_host.present? && download_uri =~ %r{^https?://[\d.]+[:/]}
             download_uri = download_uri.sub(%r{^https?://[\d.]+}, internal_host.sub(%r{/$}, ''))
         end

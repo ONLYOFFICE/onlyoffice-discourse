@@ -1,6 +1,8 @@
 en:
   site_settings:
-    onlyoffice_connector_enabled: "Enable ONLYOFICE plugin"
-    onlyoffice_connector_ds_host: "ONLYOFFICE Docs Host (for browser)"
-    onlyoffice_connector_ds_internal_host: "ONLYOFFICE Docs Internal Host (for server)"
-    onlyoffice_connector_ds_jwt: "ONLYOFFICE Docs JWT Secret"
+    onlyoffice_connector_enabled: "Enable ONLYOFFICE plugin."
+    ONLYOFFICE_Docs_address: "Here, please specify the address of your ONLYOFFICE Docs server."
+    ONLYOFFICE_Docs_address_for_internal_requests_from_the_server: "Fill in only when using internal routing between the Discourse server and ONLYOFFICE Docs, without relying on public addresses"
+    Server_address_for_internal_requests_from_ONLYOFFICE_Docs: "Fill in only when using internal routing between the Discourse server and ONLYOFFICE Docs, without relying on public addresses"
+    ONLYOFFICE_Docs_secret_key: "Use the auto-generated JWT secret key or set your own here and the same one in the ONLYOFFICE Docs config file."
+    JWT_header: "Leave blank to use default header"

@@ -40,11 +40,11 @@ module Onlyoffice
     end
 
     def build_full_url(file_url)
-      "#{SiteSetting.onlyoffice_connector_discourse_host}#{file_url}"
+      "#{SiteSetting.Server_address_for_internal_requests_from_ONLYOFFICE_Docs}#{file_url}"
     end
 
     def request_conversion(full_file_url, file_url)
-      ds_internal_host = SiteSetting.onlyoffice_connector_ds_internal_host
+      ds_internal_host = SiteSetting.ONLYOFFICE_Docs_address_for_internal_requests_from_the_server
       conversion_url = "#{ds_internal_host}/ConvertService.ashx"
       
       conversion_request = {
