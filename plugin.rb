@@ -77,14 +77,4 @@ after_initialize do
     Discourse::Application.routes.append do
         mount ::Onlyoffice::Engine => "/onlyoffice"
     end
-
-    register_asset_filter do |type, request, opts|
-        path = (opts[:path] || "")
-        case type
-        when :css
-            path.start_with?("#{Discourse.base_path}/onlyoffice") || path.start_with?("#{Discourse.base_path}/t")
-        else
-            true
-        end
-      end
 end
