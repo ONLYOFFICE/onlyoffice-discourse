@@ -5,11 +5,11 @@ ru:
     onlyoffice_buttons:
       create: "Создать в ONLYOFFICE"
     onlyoffice_create_form:
-      title: "Создать документ ONLYOFFICE"
-      filename_label: "Название документа:"
+      title: "Создать новый файл"
+      filename_label: "Имя файла:"
       filename_placeholder: "Введите название документа (необязательно)"
-      select_type: "Выберите тип документа:"
-      create_button: "Создать документ"
+      select_type: "Выберите тип:"
+      create_button: "Создать файл"
       document_type_docx: "Документ"
       document_type_xlsx: "Таблица"
       document_type_pptx: "Презентация"
@@ -23,6 +23,8 @@ ru:
       select_action: "Выберите действие для этого документа:"
       download: "Скачать"
       open: "Открыть в ONLYOFFICE"
+      preview: "Просмотр в ONLYOFFICE"
+      edit: "Редактировать в ONLYOFFICE"
       convert: "Конвертировать"
       permissions: "Управление правами"
     onlyoffice_convert:
@@ -40,3 +42,7 @@ ru:
       current_permissions: "Текущие права"
       no_permissions: "Права не установлены."
       remove: "Удалить права"
+      can_edit: "Может редактировать"
+    onlyoffice_editor:
+      loading: "Загрузка редактора..."
+      error: "Не удалось загрузить редактор"

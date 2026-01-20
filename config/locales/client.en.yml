@@ -5,11 +5,11 @@ en:
     onlyoffice_buttons:
       create: "Create in ONLYOFFICE"
     onlyoffice_create_form:
-      title: "Create ONLYOFFICE Document"
-      filename_label: "Document name:"
+      title: "Create new File"
+      filename_label: "File name:"
       filename_placeholder: "Enter document name (optional)"
-      select_type: "Select document type:"
-      create_button: "Create Document"
+      select_type: "Select type:"
+      create_button: "Create File"
       document_type_docx: "Document"
       document_type_xlsx: "Spreadsheet"
       document_type_pptx: "Presentation"
@@ -23,6 +23,8 @@ en:
       select_action: "Choose an action for this document:"
       download: "Download"
       open: "Open in ONLYOFFICE"
+      preview: "Preview with ONLYOFFICE"
+      edit: "Edit with ONLYOFFICE"
       convert: "Convert"
       permissions: "Manage Permissions"
     onlyoffice_convert:
@@ -40,4 +42,7 @@ en:
       current_permissions: "Current Permissions"
       no_permissions: "No permissions set."
       remove: "Remove permission"
-
+      can_edit: "Can Edit"
+    onlyoffice_editor:
+      loading: "Loading editor..."
+      error: "Failed to load editor"
