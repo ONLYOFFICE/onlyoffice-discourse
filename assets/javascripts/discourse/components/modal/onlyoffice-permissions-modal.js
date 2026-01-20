@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default class OnlyofficePermissionsModal extends Component {
   @tracked isLoading = true;
   @tracked selectedUserId = null;
-  @tracked selectedPermission = "viewer";
+  @tracked canEdit = true;
   @tracked searchTerm = "";
   @tracked searchResults = [];
   @tracked permissions = [];
@@ -81,8 +81,8 @@ export default class OnlyofficePermissionsModal extends Component {
   }
 
   @action
-  setPermission(permissionType) {
-    this.selectedPermission = permissionType;
+  toggleCanEdit() {
+    this.canEdit = !this.canEdit;
   }
 
   @action
@@ -96,7 +96,7 @@ export default class OnlyofficePermissionsModal extends Component {
         type: "POST",
         data: {
           user_id: this.selectedUserId,
-          permission_type: this.selectedPermission,
+          permission_type: this.canEdit ? "editor" : "viewer",
           post_id: this.postId,
         },
       });
@@ -104,7 +104,7 @@ export default class OnlyofficePermissionsModal extends Component {
       await this.loadPermissions();
       this.selectedUserId = null;
       this.searchTerm = "";
-      this.selectedPermission = "viewer";
+      this.canEdit = true;
     } catch (error) {
       popupAjaxError(error);
     }
@@ -125,8 +125,8 @@ export default class OnlyofficePermissionsModal extends Component {
   }
 
   @action
-  handlePermissionChange(permissionId, event) {
-    const newType = event.target.value;
+  togglePermission(permissionId, currentType) {
+    const newType = currentType === "editor" ? "viewer" : "editor";
     this.updatePermission(permissionId, newType);
   }
 

@@ -45,30 +45,17 @@
             {{/if}}
           </div>
 
-          <div class="permission-selector">
-            <label>{{i18n "onlyoffice_permissions.permission_type"}}</label>
-            <div class="permission-options">
-              <button
-                class="permission-option
-                  {{if (eq this.selectedPermission 'viewer') 'selected'}}"
-                type="button"
-                {{on "click" (fn this.setPermission "viewer")}}
-              >
-                <span class="label">{{i18n
-                    "onlyoffice_permissions.viewer"
-                  }}</span>
-              </button>
-              <button
-                class="permission-option
-                  {{if (eq this.selectedPermission 'editor') 'selected'}}"
-                type="button"
-                {{on "click" (fn this.setPermission "editor")}}
-              >
-                <span class="label">{{i18n
-                    "onlyoffice_permissions.editor"
-                  }}</span>
-              </button>
-            </div>
+          <div class="permission-toggle">
+            <label class="toggle-label">
+              <input
+                type="checkbox"
+                checked={{this.canEdit}}
+                {{on "change" this.toggleCanEdit}}
+                class="toggle-checkbox"
+              />
+              <span class="toggle-switch"></span>
+              <span class="toggle-text">{{i18n "onlyoffice_permissions.can_edit"}}</span>
+            </label>
           </div>
 
           <DButton
@@ -101,26 +88,16 @@
                   </div>
 
                   <div class="permission-controls">
-                    <select
-                      class="permission-select"
-                      {{on
-                        "change"
-                        (fn this.handlePermissionChange permission.id)
-                      }}
-                    >
-                      <option
-                        value="viewer"
-                        selected={{eq permission.permission_type "viewer"}}
-                      >
-                        {{i18n "onlyoffice_permissions.viewer"}}
-                      </option>
-                      <option
-                        value="editor"
-                        selected={{eq permission.permission_type "editor"}}
-                      >
-                        {{i18n "onlyoffice_permissions.editor"}}
-                      </option>
-                    </select>
+                    <label class="toggle-label inline">
+                      <input
+                        type="checkbox"
+                        checked={{eq permission.permission_type "editor"}}
+                        {{on "change" (fn this.togglePermission permission.id permission.permission_type)}}
+                        class="toggle-checkbox"
+                      />
+                      <span class="toggle-switch"></span>
+                      <span class="toggle-text">{{i18n "onlyoffice_permissions.can_edit"}}</span>
+                    </label>
 
                     <DButton
                       @action={{fn this.removePermission permission.id}}
@@ -143,6 +120,6 @@
   </:body>
 
   <:footer>
-    <DButton @action={{this.cancel}} @label="close" class="btn-flat" />
+    <DButton @action={{this.cancel}} @label="Close" class="btn-flat" />
   </:footer>
 </DModal>
