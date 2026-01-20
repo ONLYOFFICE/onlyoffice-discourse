@@ -1,0 +1,25 @@
+<DModal
+  @title="ONLYOFFICE"
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+  class="onlyoffice-editor-modal"
+>
+  <:body>
+    <div class="onlyoffice-editor-container">
+      {{#if this.isLoading}}
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <p>{{i18n "onlyoffice_editor.loading"}}</p>
+        </div>
+      {{else if this.error}}
+        <div class="error-container">
+          <p>{{i18n "onlyoffice_editor.error"}}</p>
+        </div>
+      {{else}}
+        <OnlyofficeApiLink @host={{this.dsHost}} />
+        <div id={{this.elementId}} {{did-insert this.setupEditor}}></div>
+      {{/if}}
+    </div>
+  </:body>
+</DModal>

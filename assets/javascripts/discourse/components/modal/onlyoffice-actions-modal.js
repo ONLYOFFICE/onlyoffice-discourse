@@ -189,8 +189,13 @@ export default class OnlyofficeActionsModal extends Component {
         this.args.closeModal();
       },
       open: () => {
-        window.open(`/onlyoffice/editor/${this.uploadShortUrl}`, "_blank");
         this.args.closeModal();
+        this.modal.show(OnlyofficeEditorModal, {
+          model: {
+            uploadShortUrl: this.uploadShortUrl,
+            viewOnly: !this.canEdit,
+          },
+        });
       },
       convert: () => {
         this.args.closeModal();
