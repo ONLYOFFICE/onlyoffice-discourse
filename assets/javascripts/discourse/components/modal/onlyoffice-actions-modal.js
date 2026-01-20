@@ -2,9 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { getURLWithCDN } from "discourse/lib/get-url";
-import { i18n } from "discourse-i18n";
 import OnlyofficeConvertModal from "./onlyoffice-convert-modal";
+import OnlyofficeEditorModal from "./onlyoffice-editor-modal";
 import OnlyofficePermissionsModal from "./onlyoffice-permissions-modal";
 
 export default class OnlyofficeActionsModal extends Component {
@@ -12,6 +13,47 @@ export default class OnlyofficeActionsModal extends Component {
   @service currentUser;
 
   @tracked isProcessing = false;
+  @tracked userPermission = null;
+  @tracked permissionsLoaded = false;
+
+  constructor() {
+    super(...arguments);
+    this.loadUserPermission();
+  }
+
+  async loadUserPermission() {
+    // If no user logged in, default to viewer
+    if (!this.currentUser) {
+      this.userPermission = "viewer";
+      this.permissionsLoaded = true;
+      return;
+    }
+
+    // Owner always has edit rights
+    if (this.isOwner) {
+      this.userPermission = "editor";
+      this.permissionsLoaded = true;
+      return;
+    }
+
+    try {
+      const url = `/onlyoffice/permissions/${this.uploadShortUrl}${this.postId ? `?post_id=${this.postId}` : ""}`;
+      const response = await ajax(url);
+      const permissions = response.permissions || [];
+
+      // Find current user's permission
+      const myPermission = permissions.find(
+        (p) => p.user_id === this.currentUser.id
+      );
+
+      this.userPermission = myPermission ? myPermission.permission_type : "viewer";
+    } catch {
+      // Default to viewer if can't load permissions
+      this.userPermission = "viewer";
+    } finally {
+      this.permissionsLoaded = true;
+    }
+  }
 
   get filename() {
     return this.args.model.filename;
@@ -67,6 +109,13 @@ export default class OnlyofficeActionsModal extends Component {
     return false;
   }
 
+  get canEdit() {
+    if (!this.permissionsLoaded) {
+      return this.isOwner;
+    }
+    return this.userPermission === "editor";
+  }
+
   get documentType() {
     const type = this.formatInfo?.type;
     if (type === "word" || type === "cell" || type === "slide") {
@@ -84,36 +133,41 @@ export default class OnlyofficeActionsModal extends Component {
   get availableActions() {
     const formatActions = this.formatInfo?.actions || [];
     const convertFormats = this.formatInfo?.convert || [];
-    const actions = [
-      {
-        id: "download",
-        label: i18n("onlyoffice_actions.download"),
-        icon: "download",
-        class: "btn-default",
-      },
-    ];
+    const actions = [];
 
     if (formatActions.includes("view") || formatActions.includes("edit")) {
+      const openLabelKey = this.canEdit
+        ? "onlyoffice_actions.edit"
+        : "onlyoffice_actions.preview";
+
       actions.push({
         id: "open",
-        label: i18n("onlyoffice_actions.open"),
-        icon: "file",
+        labelKey: openLabelKey,
+        icon: this.canEdit ? "pen-to-square" : "eye",
         class: "btn-default",
       });
-
-      if (this.isOwner) {
-        actions.push({
-          id: "permissions",
-          label: i18n("onlyoffice_actions.permissions"),
-          icon: "users",
-          class: "btn-default",
-        });
-      }
     }
+
+    actions.push({
+      id: "download",
+      labelKey: "onlyoffice_actions.download",
+      icon: "download",
+      class: "btn-default",
+    });
+
+    if (this.isOwner) {
+      actions.push({
+        id: "permissions",
+        labelKey: "onlyoffice_actions.permissions",
+        icon: "users",
+        class: "btn-default",
+      });
+    }
+
     if (convertFormats.length > 0) {
       actions.push({
         id: "convert",
-        label: i18n("onlyoffice_actions.convert"),
+        labelKey: "onlyoffice_actions.convert",
         icon: "arrows-rotate",
         class: "btn-default",
       });

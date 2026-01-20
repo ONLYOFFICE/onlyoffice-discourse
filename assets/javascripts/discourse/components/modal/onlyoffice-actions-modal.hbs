@@ -20,17 +20,23 @@
           {{i18n "onlyoffice_actions.select_action"}}
         </p>
 
-        <div class="action-buttons">
-          {{#each this.availableActions as |action|}}
-            <DButton
-              @action={{fn this.performAction action.id}}
-              @icon={{action.icon}}
-              @label={{concat "onlyoffice_actions." action.id}}
-              @disabled={{this.isProcessing}}
-              class={{concat "btn-action " action.class}}
-            />
-          {{/each}}
-        </div>
+        {{#if this.permissionsLoaded}}
+          <div class="action-buttons">
+            {{#each this.availableActions as |action|}}
+              <DButton
+                @action={{fn this.performAction action.id}}
+                @icon={{action.icon}}
+                @label={{action.labelKey}}
+                @disabled={{this.isProcessing}}
+                class={{concat "btn-action " action.class}}
+              />
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="spinner-container">
+            <div class="spinner"></div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </:body>
