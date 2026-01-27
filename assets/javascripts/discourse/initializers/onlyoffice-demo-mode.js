@@ -11,7 +11,7 @@ export default {
       return;
     }
 
-    withPluginApi("0.8", (api) => {
+    withPluginApi((api) => {
       let demoInfoCache = null;
 
       const applyDemoModeStyles = async () => {

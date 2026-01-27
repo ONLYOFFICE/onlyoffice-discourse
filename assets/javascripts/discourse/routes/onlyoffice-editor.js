@@ -2,7 +2,7 @@ import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class OnlyofficeEditorRoute extends Route {
   @service toasts;
@@ -36,13 +36,13 @@ export default class OnlyofficeEditorRoute extends Route {
           ? new Date(expirationDate).toLocaleDateString()
           : "";
 
-        const message = I18n.t("js.onlyoffice_editor.demo_notice", {
+        const message = i18n("js.onlyoffice_editor.demo_notice", {
           date: formattedDate,
         });
 
         // Show warning toast notification
         this.toasts.warning({
-          data: { message: message },
+          data: { message },
           duration: 8000,
         });
       }
