@@ -4,9 +4,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
 
 export default class OnlyofficeEditorModal extends Component {
   @service siteSettings;
+  @service toasts;
 
   @tracked isLoading = true;
   @tracked editorConfig = null;
@@ -35,7 +37,7 @@ async loadEditorConfig() {
     try {
       const uploadShortUrl = this.args.model.uploadShortUrl;
       const viewParam = this.args.model.viewOnly ? "?view=1" : "";
-      
+
       const response = await ajax(
         `/onlyoffice/editor/${uploadShortUrl}.json${viewParam}`,
         {
@@ -48,6 +50,24 @@ async loadEditorConfig() {
         response.doc_config = JSON.parse(response.doc_config);
       }
 
+      // Show demo mode notification if enabled
+      if (response.demo_mode?.enabled) {
+        const expirationDate = response.demo_mode.expiration_date;
+        const formattedDate = expirationDate
+          ? new Date(expirationDate).toLocaleDateString()
+          : "";
+
+        const message = I18n.t("js.onlyoffice_editor.demo_notice", {
+          date: formattedDate,
+        });
+
+        // Show warning toast notification
+        this.toasts.warning({
+          data: { message: message },
+          duration: 8000,
+        });
+      }
+
       this.editorConfig = response.doc_config;
       this.dsHost = response.config.ds_host;
       this.isLoading = false;
@@ -58,6 +78,13 @@ async loadEditorConfig() {
       this.error = error;
       this.isLoading = false;
       popupAjaxError(error);
+
+      // Close modal if demo expired
+      if (error.jqXHR?.responseJSON?.demo_expired) {
+        setTimeout(() => {
+          this.args.closeModal();
+        }, 100);
+      }
     }
   }
 
@@ -81,7 +108,7 @@ async loadEditorConfig() {
     }
   }
 
-  
+
 
   @action
   close() {

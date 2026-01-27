@@ -11,11 +11,11 @@ require "securerandom"
 class Onlyoffice::OnlyofficeController < ::ApplicationController
     include Onlyoffice::ControllerExtensions
 
-    requires_login except: [:callback, :formats, :editor]
-    protect_from_forgery except: [:callback, :formats]
-    skip_before_action :verify_authenticity_token, only: [:callback, :formats]
-    skip_before_action :redirect_to_login_if_required, only: [:formats, :callback, :editor]
-    skip_before_action :check_xhr, only: [:formats, :editor, :callback, :convert]
+    requires_login except: [:callback, :formats, :editor, :demo_info]
+    protect_from_forgery except: [:callback, :formats, :demo_info]
+    skip_before_action :verify_authenticity_token, only: [:callback, :formats, :demo_info]
+    skip_before_action :redirect_to_login_if_required, only: [:formats, :callback, :editor, :demo_info]
+    skip_before_action :check_xhr, only: [:formats, :editor, :callback, :convert, :demo_info]
     skip_before_action :preload_json, only: [:callback]
     skip_before_action :redirect_to_profile_if_required, only: [:callback]
 
@@ -27,6 +27,18 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
         else
             render json: []
         end
+    end
+
+    def demo_info
+        data = Onlyoffice::OnlyofficeDemo.demo_data
+        expiration_date = Onlyoffice::OnlyofficeDemo.expiration_date
+        
+        render json: {
+            enabled: data[:enabled],
+            available: data[:available],
+            days_remaining: Onlyoffice::OnlyofficeDemo.days_remaining,
+            expiration_date: expiration_date ? expiration_date.iso8601 : nil
+        }
     end
 
     def create
@@ -145,6 +157,15 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
     def editor
         upload_id = params[:id].to_s.sub(/\.json$/, '')
 
+        # Check if demo mode is enabled but expired
+        demo_data = Onlyoffice::OnlyofficeDemo.demo_data
+        if demo_data[:enabled] && !demo_data[:available]
+            return render json: { 
+                error: I18n.t("site_settings.onlyoffice_connector.demo.expired_error"),
+                demo_expired: true
+            }, status: :forbidden
+        end
+
         if request.format.json?
             upload = find_upload_by_short_url(upload_id)
 
@@ -224,13 +245,25 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
                 doc_config[:token] = Onlyoffice::OnlyofficeJwt.generate_editor_token(doc_config)
             end
 
-            render json: {
+            response_data = {
                 config: {
                     ds_host: SiteSetting.ONLYOFFICE_Docs_address,
                 },
                 id: params[:id],
                 doc_config: doc_config
             }
+
+            # Add demo mode info if enabled
+            if demo_data[:enabled] && demo_data[:available]
+                expiration_date = Onlyoffice::OnlyofficeDemo.expiration_date
+                response_data[:demo_mode] = {
+                    enabled: true,
+                    days_remaining: Onlyoffice::OnlyofficeDemo.days_remaining,
+                    expiration_date: expiration_date ? expiration_date.iso8601 : nil
+                }
+            end
+
+            render json: response_data
         else
             render "default/empty", formats: [:html]
         end

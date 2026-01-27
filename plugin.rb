@@ -14,6 +14,8 @@ enabled_site_setting :onlyoffice_connector_enabled
 on(:site_setting_changed) do |name, _old_value, new_value|
     if name == :ONLYOFFICE_connector_auto_authorize_extensions && new_value == true
         Onlyoffice.update_authorized_extensions
+    elsif name == :Connect_to_demo_ONLYOFFICE_Docs_server
+        Onlyoffice::OnlyofficeDemo.enable_demo(new_value)
     end
 end
 
@@ -45,6 +47,7 @@ after_initialize do
 
     Onlyoffice.update_authorized_extensions if SiteSetting.ONLYOFFICE_connector_auto_authorize_extensions
 
+    require_relative "lib/onlyoffice_discourse/onlyoffice_demo.rb"
     require_relative "lib/onlyoffice_discourse/onlyoffice_jwt.rb"
     require_relative "lib/onlyoffice_discourse/onlyoffice_conversion_service.rb"
     require_relative "lib/onlyoffice_discourse/onlyoffice_controller_extensions.rb"
@@ -67,6 +70,7 @@ after_initialize do
         get "editor/*id" => "onlyoffice#editor", constraints: { id: /[^\/]+/ }
         match "callback/*id" => "onlyoffice#callback", constraints: { id: /[^\/]+/ }, via: [:get, :post]
         get "formats" => "onlyoffice#formats"
+        get "demo-info" => "onlyoffice#demo_info"
         get "upload-info/:id" => "onlyoffice#upload_info", constraints: { id: /[^\/]+/ }
         get "permissions/:id" => "onlyoffice#list_permissions", constraints: { id: /[^\/]+/ }
         post "permissions/:id" => "onlyoffice#create_permission", constraints: { id: /[^\/]+/ }

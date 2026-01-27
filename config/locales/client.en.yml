@@ -46,3 +46,5 @@ en:
     onlyoffice_editor:
       loading: "Loading editor..."
       error: "Failed to load editor"
+      demo_expired: "The 30-day test period is over. You are no longer able to connect to the demo server."
+      demo_notice: "You are successfully connected to the demo server. It will be available until %{date}. To disable it, uncheck the box in plugin settings."

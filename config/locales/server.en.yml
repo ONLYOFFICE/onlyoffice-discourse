@@ -1,7 +1,12 @@
 en:
   site_settings:
     onlyoffice_connector_enabled: "Enable ONLYOFFICE plugin."
-    ONLYOFFICE_Docs_address: "Here, please specify the address of your ONLYOFFICE Docs server."
+    Connect_to_demo_ONLYOFFICE_Docs_server: "This is a public test server, please do not use it for private sensitive data. The server will be available during a 30-day period."
+    onlyoffice_connector:
+      demo:
+        enabled_notice: "You are successfully connected to the demo server. It will be available until %{date}. To disable it, uncheck the box."
+        expired_notice: "The 30-day test period is over. You are no longer able to connect to the demo server."
+        expired_error: "The 30-day test period is over. You are no longer able to connect to the demo server."
     ONLYOFFICE_Docs_address_for_internal_requests_from_the_server: "Fill in only when using internal routing between the Discourse server and ONLYOFFICE Docs, without relying on public addresses"
     Server_address_for_internal_requests_from_ONLYOFFICE_Docs: "Fill in only when using internal routing between the Discourse server and ONLYOFFICE Docs, without relying on public addresses"
     ONLYOFFICE_Docs_secret_key: "Use the auto-generated JWT secret key or set your own here and the same one in the ONLYOFFICE Docs config file."

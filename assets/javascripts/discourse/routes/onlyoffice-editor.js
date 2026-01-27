@@ -1,7 +1,12 @@
 import Route from "@ember/routing/route";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
 
 export default class OnlyofficeEditorRoute extends Route {
+  @service toasts;
+
   queryParams = {
     view: {
       refreshModel: true,
@@ -10,18 +15,47 @@ export default class OnlyofficeEditorRoute extends Route {
 
   async model(params) {
     const viewParam = params.view ? "?view=1" : "";
-    const response = await ajax(
-      `/onlyoffice/editor/${params.id}.json${viewParam}`,
-      {
-        type: "GET",
-        dataType: "json",
-      },
-    );
 
-    if (typeof response.doc_config === "string") {
-      response.doc_config = JSON.parse(response.doc_config);
+    try {
+      const response = await ajax(
+        `/onlyoffice/editor/${params.id}.json${viewParam}`,
+        {
+          type: "GET",
+          dataType: "json",
+        },
+      );
+
+      if (typeof response.doc_config === "string") {
+        response.doc_config = JSON.parse(response.doc_config);
+      }
+
+      // Show demo mode notification if enabled
+      if (response.demo_mode?.enabled) {
+        const expirationDate = response.demo_mode.expiration_date;
+        const formattedDate = expirationDate
+          ? new Date(expirationDate).toLocaleDateString()
+          : "";
+
+        const message = I18n.t("js.onlyoffice_editor.demo_notice", {
+          date: formattedDate,
+        });
+
+        // Show warning toast notification
+        this.toasts.warning({
+          data: { message: message },
+          duration: 8000,
+        });
+      }
+
+      return response;
+    } catch (error) {
+      // Show error notification
+      popupAjaxError(error);
+
+      // Redirect back to previous page
+      this.router.transitionTo("discovery.latest");
+
+      throw error;
     }
-
-    return response;
   }
 }
