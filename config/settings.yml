@@ -3,10 +3,6 @@ plugins:
     default: true
     client: true
 
-  Connect_to_demo_ONLYOFFICE_Docs_server:
-    default: false
-    client: true
-
   ONLYOFFICE_Docs_address:
     default: 'http://localhost'
     client: true
@@ -23,3 +19,6 @@ plugins:
     client: true
   ONLYOFFICE_connector_auto_authorize_extensions:
     default: true
+  Connect_to_demo_ONLYOFFICE_Docs_server:
+    default: false
+    client: true

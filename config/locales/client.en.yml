@@ -7,7 +7,7 @@ en:
     onlyoffice_create_form:
       title: "Create new File"
       filename_label: "File name:"
-      filename_placeholder: "Enter document name (optional)"
+      filename_placeholder: "Enter file name (optional)"
       select_type: "Select type:"
       create_button: "Create File"
       document_type_docx: "Document"
@@ -43,6 +43,7 @@ en:
       no_permissions: "No permissions set."
       remove: "Remove permission"
       can_edit: "Can Edit"
+      close: "Close"
     onlyoffice_editor:
       loading: "Loading editor..."
       error: "Failed to load editor"

@@ -7,7 +7,7 @@ ru:
     onlyoffice_create_form:
       title: "Создать новый файл"
       filename_label: "Имя файла:"
-      filename_placeholder: "Введите название документа (необязательно)"
+      filename_placeholder: "Введите название файла (необязательно)"
       select_type: "Выберите тип:"
       create_button: "Создать файл"
       document_type_docx: "Документ"
@@ -43,6 +43,7 @@ ru:
       no_permissions: "Права не установлены."
       remove: "Удалить права"
       can_edit: "Может редактировать"
+      close: "Закрыть"
     onlyoffice_editor:
       loading: "Загрузка редактора..."
       error: "Не удалось загрузить редактор"
