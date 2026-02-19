@@ -46,3 +46,9 @@ ru:
     onlyoffice_editor:
       loading: "Загрузка редактора..."
       error: "Не удалось загрузить редактор"
+    admin:
+      onlyoffice:
+        welcome:
+          title: "Добро пожаловать в ONLYOFFICE Docs!"
+          description: "Работайте со всеми видами офисных документов в Discourse с помощью ONLYOFFICE Docs."
+          suggest_feature: "Предложить функцию"

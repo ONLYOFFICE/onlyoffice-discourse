@@ -48,3 +48,9 @@ en:
       error: "Failed to load editor"
       demo_expired: "The 30-day test period is over. You are no longer able to connect to the demo server."
       demo_notice: "You are successfully connected to the demo server. It will be available until %{date}. To disable it, uncheck the box in plugin settings."
+    admin:
+      onlyoffice:
+        welcome:
+          title: "Welcome to ONLYOFFICE Docs!"
+          description: "Work on all kinds of office documents within Discourse using ONLYOFFICE Docs."
+          suggest_feature: "Suggest a feature"

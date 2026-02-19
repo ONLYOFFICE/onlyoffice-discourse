@@ -599,3 +599,40 @@ $onlyoffice-padding-lg: 1.5rem;
 .onlyoffice-container {
   height: 100%;
 }
+
+// Uservoice banner on settings page
+.onlyoffice-uservoice {
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: $onlyoffice-border-radius;
+  padding: $onlyoffice-padding-lg;
+  margin-bottom: 1.5rem;
+
+  h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  p {
+    margin: 0.5rem 0;
+    color: var(--primary-high);
+    line-height: 1.5;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  a {
+    color: var(--tertiary);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      color: var(--tertiary-hover);
+      text-decoration: underline;
+    }
+  }
+}
