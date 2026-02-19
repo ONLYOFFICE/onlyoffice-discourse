@@ -196,9 +196,9 @@ $onlyoffice-padding-lg: 1.5rem;
         }
 
         &.selected {
-          border-color: var(--primary);
+          border-color: var(--tertiary);
           background: var(--primary-very-low);
-          box-shadow: 0 0 0 2px var(--primary-low);
+          box-shadow: 0 0 0 2px var(--tertiary-low);
         }
 
         .document-type-icon {
@@ -259,9 +259,9 @@ $onlyoffice-padding-lg: 1.5rem;
           }
 
           &.selected {
-            border-color: var(--primary);
+            border-color: var(--tertiary);
             background: var(--primary-very-low);
-            box-shadow: 0 0 0 2px var(--primary-low);
+            box-shadow: 0 0 0 2px var(--tertiary-low);
           }
 
           .format-label {
