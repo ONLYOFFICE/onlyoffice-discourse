@@ -131,9 +131,17 @@ $onlyoffice-padding-lg: 1.5rem;
             color: var(--primary);
             border: 1px solid var(--primary-low);
 
+            .d-icon {
+              color: var(--primary-medium);
+            }
+
             &:hover {
               background: var(--primary-very-low);
               border-color: var(--primary-medium);
+
+              .d-icon {
+                color: var(--primary-high);
+              }
             }
           }
         }
