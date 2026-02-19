@@ -376,9 +376,9 @@ $onlyoffice-padding-lg: 1.5rem;
         position: relative;
         width: 48px;
         height: 24px;
-        background: var(--primary-low);
+        background: var(--primary-low-mid);
         border-radius: 12px;
-        transition: background 0.3s ease;
+        transition: background 0.25s ease;
         flex-shrink: 0;
 
         &::after {
@@ -390,17 +390,25 @@ $onlyoffice-padding-lg: 1.5rem;
           height: 20px;
           background: var(--secondary);
           border-radius: 50%;
-          transition: transform 0.3s ease;
+          transition: transform 0.25s ease;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
       }
 
+      .toggle-label:hover .toggle-switch {
+        background: var(--primary-high);
+      }
+
       .toggle-checkbox:checked + .toggle-switch {
-        background: var(--success);
+        background: var(--tertiary);
 
         &::after {
           transform: translateX(24px);
         }
+      }
+
+      .toggle-label:hover .toggle-checkbox:checked + .toggle-switch {
+        background: var(--tertiary-hover);
       }
 
       .toggle-text {
