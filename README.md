@@ -1,6 +1,7 @@
 # ONLYOFFICE plugin for Discourse
 
-Welcome to the official repository for the **ONLYOFFICE plugin for Discourse**! It brings the power of [ONLYOFFICE Docs](https://www.onlyoffice.com/docs) right to your [Discourse](https://www.discourse.org/) enabling work with office files in topics and replies.
+Welcome to the official repository for the **ONLYOFFICE plugin for Discourse**!
+It brings the power of [ONLYOFFICE Docs](https://www.onlyoffice.com/docs) right to your [Discourse](https://www.discourse.org/) enabling work with office files in topics and replies.
 
 ## Features ✨
 
@@ -26,44 +27,54 @@ You have two main choices for the ONLYOFFICE Document Server:
 * **Community Edition (Free)**: Ideal for small teams and personal use.
   * The **recommended** installation method is [Docker](https://github.com/onlyoffice/Docker-DocumentServer).
   * To install it on Debian, Ubuntu, or other derivatives, click [here](https://helpcenter.onlyoffice.com/docs/installation/docs-community-install-ubuntu.aspx).
-* **Enterprise Edition**: Provides scalability for larger organizations. To install, click [here](https://helpcenter.onlyoffice.com/docs/installation/enterprise).
+* **Enterprise Edition**: Provides scalability for larger organizations.
+  To install, click [here](https://helpcenter.onlyoffice.com/docs/installation/enterprise).
 
 Community Edition vs Enterprise Edition comparison can be found [here](#onlyoffice-docs-editions).
 
 ## Plugin configuration ⚙️
 
-Navigate to the **Admin** section in the left panel. On the page that opens, locate the **Plugins** section in the left panel and click on **Installed plugins**. From the list, find **ONLYOFFICE Discourse** and click **Settings**.
+Navigate to the **Admin** section in the left panel.
+On the page that opens, locate the **Plugins** section in the left panel and click on **Installed plugins**.
+From the list, find **ONLYOFFICE Discourse** and click **Settings**.
 
 Enter the following details:
 
 - **ONLYOFFICE Docs address**: The URL of your Docs instance (cloud or on-premises).
-- **ONLYOFFICE Docs secret key**: Enables secure token-based access to documents. [Learn more](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/)
+- **ONLYOFFICE Docs secret key**: Enables secure token-based access to documents.
+  [Learn more](https://api.onlyoffice.com/docs/docs-api/additional-api/signature/)
 - **JWT Header**: If you have custom header naming in your Docs setup, enter it here.
 
-To ensure the ONLYOFFICE plugin functions properly, enable the **Auto authorize extensions** setting. By default, Discourse limits the list of allowed attachment formats. Enabling this setting automatically expands the list of authorized extensions in Discourse, allowing users to attach and open files in the editor via the ONLYOFFICE plugin.
+To ensure the ONLYOFFICE plugin functions properly, enable the **Auto authorize extensions** setting.
+By default, Discourse limits the list of allowed attachment formats.
+Enabling this setting automatically expands the list of authorized extensions in Discourse, allowing users to attach and open files in the editor via the ONLYOFFICE plugin.
 
-## Plugin usage 
+## Plugin usage
 
 ### Creating and editing files ✍️
 
 When adding a topic or comment, you can create a file (DOCX, XLSX, PPTX, or PDF) by clicking the ONLYOFFICE icon and selecting the desired format.
 
-The created file is automatically attached to the topic or reply. Once published, the file appears in the post, and clicking its name opens a pop-up with the following actions:
+The created file is automatically attached to the topic or reply.
+Once published, the file appears in the post, and clicking its name opens a pop-up with the following actions:
 
-- **Edit with ONLYOFFICE:** Open the file in ONLYOFFICE editors for seamless editing. The file creator is granted editing rights by default.
+- **Edit with ONLYOFFICE:** Open the file in ONLYOFFICE editors for seamless editing.
+  The file creator is granted editing rights by default.
 - **Download:** Save the file directly to your device.
 - **Manage Permissions:** Adjust access rights for the file.
 - **Convert:** Convert the file into a different format of your choice.
 
 ### File conversion 🔄
 
-Save your file in the format of your choice. Simply click the **Convert** button, select the desired format from the list, and the file will be downloaded directly to your device.
+Save your file in the format of your choice.
+Simply click the **Convert** button, select the desired format from the list, and the file will be downloaded directly to your device.
 
 ### Managing file access permissions 🔐
 
 By default, only the file owner (the post author) has editing rights, while other users can view the file.
 
-To grant editing permissions to another user, click **Manage Permissions**, enter the username in the search bar, and click **Add Permissions**. Users with granted access will appear in the **Current Permissions** section within the same window.
+To grant editing permissions to another user, click **Manage Permissions**, enter the username in the search bar, and click **Add Permissions**.
+Users with granted access will appear in the **Current Permissions** section within the same window.
 
 ## ONLYOFFICE Docs editions
 
