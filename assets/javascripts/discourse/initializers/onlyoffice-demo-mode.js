@@ -35,7 +35,7 @@ export default {
 
           settingsToDisable.forEach((settingName) => {
             const settingRow = document.querySelector(
-              `[data-setting="${settingName}"]`
+              `[data-setting="${settingName}"]`,
             );
 
             if (settingRow) {
@@ -79,15 +79,16 @@ export default {
 
           // Handle demo checkbox
           const demoCheckboxRow = document.querySelector(
-            '[data-setting="Connect_to_demo_ONLYOFFICE_Docs_server"]'
+            '[data-setting="Connect_to_demo_ONLYOFFICE_Docs_server"]',
           );
           if (demoCheckboxRow) {
             const checkbox = demoCheckboxRow.querySelector(
-              'input[type="checkbox"]'
+              'input[type="checkbox"]',
             );
 
-            const label = demoCheckboxRow.querySelector(".setting-label") ||
-                         demoCheckboxRow.querySelector("label");
+            const label =
+              demoCheckboxRow.querySelector(".setting-label") ||
+              demoCheckboxRow.querySelector("label");
 
             // Remove old messages
             if (label) {
@@ -115,13 +116,16 @@ export default {
                 message.style.color = "#e74c3c";
                 message.style.marginTop = "8px";
                 message.style.fontSize = "13px";
-                message.textContent = "The 30-day test period is over. You are no longer able to connect to the demo server.";
+                message.textContent =
+                  "The 30-day test period is over. You are no longer able to connect to the demo server.";
                 label.appendChild(message);
               }
             }
             // Demo mode is active and enabled
             else if (demoEnabled && expirationDate) {
-              const formattedDate = new Date(expirationDate).toLocaleDateString();
+              const formattedDate = new Date(
+                expirationDate,
+              ).toLocaleDateString();
 
               if (label) {
                 const message = document.createElement("div");
@@ -144,7 +148,9 @@ export default {
                 demoInfoCache = null; // Clear cache
 
                 // Find the OK button and emulated click to save
-                const okButton = demoCheckboxRow.querySelector(".setting-controls__ok");
+                const okButton = demoCheckboxRow.querySelector(
+                  ".setting-controls__ok",
+                );
                 if (okButton) {
                   okButton.click();
 
@@ -168,8 +174,10 @@ export default {
       };
 
       const checkAndApply = () => {
-        if (window.location.pathname.includes("/admin/site_settings") ||
-            window.location.pathname.includes("/admin")) {
+        if (
+          window.location.pathname.includes("/admin/site_settings") ||
+          window.location.pathname.includes("/admin")
+        ) {
           setTimeout(() => applyDemoModeStyles(), 100);
           setTimeout(() => applyDemoModeStyles(), 500);
           setTimeout(() => applyDemoModeStyles(), 1000);

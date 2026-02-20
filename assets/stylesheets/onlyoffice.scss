@@ -391,7 +391,7 @@ $onlyoffice-padding-lg: 1.5rem;
           background: var(--secondary);
           border-radius: 50%;
           transition: transform 0.25s ease;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 2px 4px rgb(0, 0, 0, 0.2);
         }
       }
 
@@ -476,7 +476,7 @@ $onlyoffice-padding-lg: 1.5rem;
             .toggle-label {
               margin-bottom: 0;
             }
-          
+
             .btn-icon {
               display: flex;
               align-items: center;
@@ -579,7 +579,7 @@ $onlyoffice-padding-lg: 1.5rem;
       flex: 1;
       min-height: 0;
       border: none;
-      
+
       iframe {
         width: 100%;
         height: 100%;
