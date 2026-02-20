@@ -43,10 +43,12 @@ export default class OnlyofficeActionsModal extends Component {
 
       // Find current user's permission
       const myPermission = permissions.find(
-        (p) => p.user_id === this.currentUser.id
+        (p) => p.user_id === this.currentUser.id,
       );
 
-      this.userPermission = myPermission ? myPermission.permission_type : "viewer";
+      this.userPermission = myPermission
+        ? myPermission.permission_type
+        : "viewer";
     } catch {
       // Default to viewer if can't load permissions
       this.userPermission = "viewer";

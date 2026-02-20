@@ -33,7 +33,7 @@ export default class OnlyofficeEditorModal extends Component {
     }
   }
 
-async loadEditorConfig() {
+  async loadEditorConfig() {
     try {
       const uploadShortUrl = this.args.model.uploadShortUrl;
       const viewParam = this.args.model.viewOnly ? "?view=1" : "";
@@ -43,7 +43,7 @@ async loadEditorConfig() {
         {
           type: "GET",
           dataType: "json",
-        }
+        },
       );
 
       if (typeof response.doc_config === "string") {
@@ -102,13 +102,14 @@ async loadEditorConfig() {
     }
 
     if (window.DocsAPI) {
-      this.docEditor = new window.DocsAPI.DocEditor(this.elementId, this.editorConfig);
+      this.docEditor = new window.DocsAPI.DocEditor(
+        this.elementId,
+        this.editorConfig,
+      );
     } else {
       setTimeout(() => this.initEditor(), 200);
     }
   }
-
-
 
   @action
   close() {
