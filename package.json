@@ -2,17 +2,17 @@
   "private": true,
   "scripts": {
     "prepare": "lefthook install",
-    "lint": "concurrently \"pnpm:lint:*(!fix)\" \"pnpm:lint:ruby\"",
-    "lint:js": "eslint assets/javascripts",
-    "lint:hbs": "ember-template-lint assets/javascripts",
-    "lint:css": "stylelint assets/stylesheets/**/*.scss",
-    "lint:ruby": "bundle exec rubocop",
-    "lint:fix": "pnpm lint:js:fix && pnpm lint:hbs:fix && pnpm lint:css:fix && pnpm format && bundle exec rubocop -a",
-    "lint:js:fix": "eslint assets/javascripts --fix",
-    "lint:hbs:fix": "ember-template-lint assets/javascripts --fix",
-    "lint:css:fix": "stylelint assets/stylesheets/**/*.scss --fix",
-    "format": "prettier --write assets/javascripts/**/*.{js,hbs} assets/stylesheets/**/*.scss",
-    "format:check": "prettier --check assets/javascripts/**/*.{js,hbs} assets/stylesheets/**/*.scss"
+    "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
+    "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
+    "lint:css": "pnpm stylelint assets/stylesheets/**/*.scss --allow-empty-input",
+    "lint:css:fix": "pnpm stylelint assets/stylesheets/**/*.scss --fix --allow-empty-input",
+    "lint:js": "eslint {assets,admin/assets,test}/javascripts --cache --no-error-on-unmatched-pattern",
+    "lint:js:fix": "eslint {assets,admin/assets,test}/javascripts --fix --no-error-on-unmatched-pattern",
+    "lint:hbs": "ember-template-lint {assets,admin/assets,test}/javascripts/**/*.gjs --no-error-on-unmatched-pattern",
+    "lint:hbs:fix": "ember-template-lint {assets,admin/assets,test}/javascripts/**/*.gjs --fix --no-error-on-unmatched-pattern",
+    "lint:prettier": "pnpm prettier assets/stylesheets/**/*.scss {assets,admin/assets,test}/javascripts/**/*.js --check --no-error-on-unmatched-pattern",
+    "lint:prettier:fix": "pnpm prettier assets/stylesheets/**/*.scss {assets,admin/assets,test}/javascripts/**/*.js -w --no-error-on-unmatched-pattern",
+    "lint:types": "ember-tsc -b"
   },
   "devDependencies": {
     "@discourse/lint-configs": "2.32.0",
@@ -27,7 +27,7 @@
     "node": ">= 22",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "9.x"
+    "pnpm": "^10"
   },
-  "packageManager": "pnpm@9.15.5"
+  "packageManager": "pnpm@10.28.0"
 }
