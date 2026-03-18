@@ -11,3 +11,4 @@ en:
     ONLYOFFICE_Docs_secret_key: "Use the auto-generated JWT secret key or set your own here and the same one in the ONLYOFFICE Docs config file."
     JWT_header: "Leave blank to use default header"
     Connect_to_demo_ONLYOFFICE_Docs_server: "This is a public test server, please do not use it for private sensitive data. The server will be available during a 30-day period."
+    ONLYOFFICE_minimum_trust_level: "Users below the selected trust level will download documents instead of opening them in ONLYOFFICE."

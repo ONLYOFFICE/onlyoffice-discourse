@@ -56,6 +56,7 @@ after_initialize do
   require_relative "lib/onlyoffice_discourse/onlyoffice_conversion_service.rb"
   require_relative "lib/onlyoffice_discourse/onlyoffice_controller_extensions.rb"
   require_relative "app/models/onlyoffice_discourse/onlyoffice_permission.rb"
+  require_relative "app/models/onlyoffice_discourse/onlyoffice_document_setting.rb"
   require_relative "app/controllers/onlyoffice_discourse/onlyoffice_controller.rb"
 
   # Include controller extensions for development mode class reloading
@@ -88,6 +89,10 @@ after_initialize do
            :constraints => {
              id: %r{[^/]+},
            }
+    put "document-settings/:id" => "onlyoffice#update_document_settings",
+        :constraints => {
+          id: %r{[^/]+},
+        }
   end
 
   Discourse::Application.routes.append { mount ::Onlyoffice::Engine => "/onlyoffice" }

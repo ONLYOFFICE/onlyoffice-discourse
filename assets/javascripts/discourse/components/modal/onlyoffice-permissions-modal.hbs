@@ -10,6 +10,24 @@
           <span class="spinner"></span>
         </div>
       {{else}}
+        <div class="default-permissions-section">
+          <h3>{{i18n "onlyoffice_permissions.default_permissions"}}</h3>
+          <p class="default-permissions-description">{{i18n "onlyoffice_permissions.default_permissions_description"}}</p>
+          
+          <div class="default-permission-toggle">
+            <label class="toggle-label">
+              <input
+                type="checkbox"
+                checked={{this.defaultCanEdit}}
+                {{on "change" this.toggleDefaultCanEdit}}
+                class="toggle-checkbox"
+              />
+              <span class="toggle-switch"></span>
+              <span class="toggle-text">{{i18n "onlyoffice_permissions.default_can_edit"}}</span>
+            </label>
+          </div>
+        </div>
+
         <div class="add-permission-section">
           <h3>{{i18n "onlyoffice_permissions.add_user"}}</h3>
 

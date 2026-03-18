@@ -95,6 +95,36 @@ export default {
           return;
         }
 
+        // Check user trust level
+        const currentUser = container.lookup("service:current-user");
+        const minimumTrustLevel =
+          siteSettings.ONLYOFFICE_minimum_trust_level;
+
+        if (currentUser) {
+          const userTrustLevel = currentUser.trust_level;
+          const isStaff = currentUser.staff;
+          const isAdmin = currentUser.admin;
+
+          // If minimum is "staff" or "admin", check accordingly
+          if (minimumTrustLevel === "staff" && !isStaff) {
+            return;
+          }
+          if (minimumTrustLevel === "admin" && !isAdmin) {
+            return;
+          }
+
+          // If minimum is a number, check trust level (staff always has access)
+          const minLevel = parseInt(minimumTrustLevel, 10);
+          if (!isNaN(minLevel) && userTrustLevel < minLevel && !isStaff) {
+            return;
+          }
+        } else {
+          // If user is not logged in and minimum trust level is set, don't show modal
+          if (minimumTrustLevel !== "0" && minimumTrustLevel !== 0) {
+            return;
+          }
+        }
+
         event.preventDefault();
         event.stopPropagation();
 

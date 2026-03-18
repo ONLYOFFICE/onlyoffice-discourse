@@ -22,3 +22,8 @@ plugins:
   Connect_to_demo_ONLYOFFICE_Docs_server:
     default: false
     client: true
+  ONLYOFFICE_minimum_trust_level:
+    default: '0'
+    type: enum
+    enum: "TrustLevelAndStaffSetting"
+    client: true

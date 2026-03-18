@@ -3,6 +3,10 @@
 module Onlyoffice
   module ControllerExtensions
     def convert
+      unless check_trust_level_access
+        return render json: { error: "Insufficient trust level" }, status: :forbidden
+      end
+
       begin
         service =
           Onlyoffice::ConversionService.new(
@@ -18,6 +22,10 @@ module Onlyoffice
     end
 
     def upload_info
+      unless check_trust_level_access
+        return render json: { error: "Insufficient trust level" }, status: :forbidden
+      end
+
       upload_short_url = params[:id]
 
       upload = nil
@@ -33,7 +41,19 @@ module Onlyoffice
         end
 
       if upload
-        render json: { upload_id: upload.id, user_id: upload.user_id }
+        # Determine user permission for this upload
+        user_permission =
+          if current_user
+            check_user_permission(upload, current_user)
+          else
+            "viewer"
+          end
+
+        render json: {
+                 upload_id: upload.id,
+                 user_id: upload.user_id,
+                 user_permission: user_permission,
+               }
       else
         render json: { error: "Upload not found" }, status: :not_found
       end
@@ -47,6 +67,10 @@ module Onlyoffice
       end
 
       permissions = Onlyoffice::Permission.where(upload_id: upload.id).includes(:user)
+      doc_settings =
+        Onlyoffice::DocumentSetting.find_or_create_by(upload_id: upload.id) do |settings|
+          settings.default_can_edit = false
+        end
 
       render json: {
                permissions:
@@ -62,6 +86,7 @@ module Onlyoffice
                      permission_type: p.permission_type,
                    }
                  end,
+               default_can_edit: doc_settings.default_can_edit,
              }
     end
 
@@ -126,7 +151,59 @@ module Onlyoffice
       end
     end
 
+    def update_document_settings
+      upload = find_upload_by_short_url(params[:id])
+      return render json: { error: "Upload not found" }, status: :not_found unless upload
+      unless can_manage_permissions?(upload)
+        return render json: { error: "Access denied" }, status: :forbidden
+      end
+
+      doc_settings =
+        Onlyoffice::DocumentSetting.find_or_create_by(upload_id: upload.id) do |settings|
+          settings.default_can_edit = false
+        end
+
+      doc_settings.default_can_edit = params[:default_can_edit] if params.key?(:default_can_edit)
+
+      if doc_settings.save
+        render json: {
+                 success: true,
+                 default_can_edit: doc_settings.default_can_edit,
+               }
+      else
+        render json: {
+                 error: doc_settings.errors.full_messages.join(", "),
+               },
+               status: :unprocessable_entity
+      end
+    end
+
     private
+
+    def check_trust_level_access
+      minimum_trust_level = SiteSetting.ONLYOFFICE_minimum_trust_level
+
+      # If no user is logged in
+      unless current_user
+        # Only allow if minimum is 0
+        return minimum_trust_level.to_s == "0"
+      end
+
+      # Check special groups
+      case minimum_trust_level.to_s
+      when "admin"
+        return current_user.admin?
+      when "staff"
+        return current_user.staff?
+      end
+
+      # For numeric trust levels, staff always has access
+      return true if current_user.staff?
+
+      # Check numeric trust level
+      min_level = minimum_trust_level.to_i
+      current_user.trust_level >= min_level
+    end
 
     def find_upload_by_short_url(short_url)
       upload = nil
@@ -153,8 +230,15 @@ module Onlyoffice
       permission = Onlyoffice::Permission.find_by(upload_id: upload.id, user_id: user.id)
       return permission.permission_type if permission
 
-      # Everyone else (including staff) gets viewer by default
-      "viewer"
+      # Check document-specific default permissions
+      doc_settings = Onlyoffice::DocumentSetting.find_by(upload_id: upload.id)
+      
+      if doc_settings && doc_settings.default_can_edit
+        return "editor"
+      else
+        # If no settings or default_can_edit is false, default to viewer
+        return "viewer"
+      end
     end
 
     def can_manage_permissions?(upload)

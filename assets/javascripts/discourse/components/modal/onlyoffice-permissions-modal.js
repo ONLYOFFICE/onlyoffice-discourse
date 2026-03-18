@@ -12,6 +12,7 @@ export default class OnlyofficePermissionsModal extends Component {
   @tracked searchTerm = "";
   @tracked searchResults = [];
   @tracked permissions = [];
+  @tracked defaultCanEdit = false;
 
   constructor() {
     super(...arguments);
@@ -39,6 +40,7 @@ export default class OnlyofficePermissionsModal extends Component {
       const url = `/onlyoffice/permissions/${this.uploadShortUrl}${this.postId ? `?post_id=${this.postId}` : ""}`;
       const response = await ajax(url);
       this.permissions = response.permissions || [];
+      this.defaultCanEdit = response.default_can_edit ?? false;
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -144,6 +146,27 @@ export default class OnlyofficePermissionsModal extends Component {
       );
 
       await this.loadPermissions();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  @action
+  async toggleDefaultCanEdit() {
+    const newValue = !this.defaultCanEdit;
+    
+    try {
+      const response = await ajax(
+        `/onlyoffice/document-settings/${this.uploadShortUrl}`,
+        {
+          type: "PUT",
+          data: {
+            default_can_edit: newValue,
+          },
+        },
+      );
+
+      this.defaultCanEdit = response.default_can_edit;
     } catch (error) {
       popupAjaxError(error);
     }

@@ -44,6 +44,9 @@ en:
       remove: "Remove permission"
       can_edit: "Can Edit"
       close: "Close"
+      default_permissions: "Default Permissions"
+      default_permissions_description: "Applies to all users by default. Can be overridden by specific permissions below."
+      default_can_edit: "Allow editing for all users"
     onlyoffice_editor:
       loading: "Loading editor..."
       error: "Failed to load editor"

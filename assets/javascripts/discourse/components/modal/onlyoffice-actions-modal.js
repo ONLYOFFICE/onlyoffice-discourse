@@ -29,27 +29,33 @@ export default class OnlyofficeActionsModal extends Component {
       return;
     }
 
-    // Owner always has edit rights
+    // Owner or post author always has edit rights
     if (this.isOwner) {
       this.userPermission = "editor";
       this.permissionsLoaded = true;
       return;
     }
 
-    try {
-      const url = `/onlyoffice/permissions/${this.uploadShortUrl}${this.postId ? `?post_id=${this.postId}` : ""}`;
-      const response = await ajax(url);
-      const permissions = response.permissions || [];
+    // Check if user is the upload owner (even if not post author)
+    if (this.uploadUserId && this.uploadUserId === this.currentUser.id) {
+      this.userPermission = "editor";
+      this.permissionsLoaded = true;
+      return;
+    }
 
-      // Find current user's permission
-      const myPermission = permissions.find(
-        (p) => p.user_id === this.currentUser.id,
+    // Load user permission from upload-info endpoint
+    try {
+      const response = await ajax(
+        `/onlyoffice/upload-info/${this.uploadShortUrl}`,
       );
 
-      this.userPermission = myPermission
-        ? myPermission.permission_type
-        : "viewer";
-    } catch {
+      // eslint-disable-next-line no-console
+      console.log("ONLYOFFICE upload-info response:", response);
+
+      this.userPermission = response.user_permission || "viewer";
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("ONLYOFFICE upload-info error:", error);
       // Default to viewer if can't load permissions
       this.userPermission = "viewer";
     } finally {
@@ -118,6 +124,13 @@ export default class OnlyofficeActionsModal extends Component {
     return this.userPermission === "editor";
   }
 
+  get canView() {
+    if (!this.permissionsLoaded) {
+      return true;
+    }
+    return this.userPermission !== "none";
+  }
+
   get documentType() {
     const type = this.formatInfo?.type;
     if (type === "word" || type === "cell" || type === "slide") {
@@ -137,7 +150,11 @@ export default class OnlyofficeActionsModal extends Component {
     const convertFormats = this.formatInfo?.convert || [];
     const actions = [];
 
-    if (formatActions.includes("view") || formatActions.includes("edit")) {
+    // Only show open/edit button if user has view or edit permission
+    if (
+      this.canView &&
+      (formatActions.includes("view") || formatActions.includes("edit"))
+    ) {
       const openLabelKey = this.canEdit
         ? "onlyoffice_actions.edit"
         : "onlyoffice_actions.preview";
