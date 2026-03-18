@@ -250,9 +250,17 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
           url: SiteSetting.Server_address_for_internal_requests_from_ONLYOFFICE_Docs + file_url,
           fileType: file_extension,
           key: doc_key,
-          permissions: {
-            edit: !is_view,
-          },
+          permissions: 
+            current_user ? 
+              { edit: !is_view } : 
+              {
+                # Anonymous users - restricted permissions
+                edit: !is_view,
+                comment: false,
+                review: false,
+                chat: false,
+                protect: false,
+              },
         },
         editorConfig: {
           mode: is_view ? "view" : "edit",
@@ -273,7 +281,14 @@ class Onlyoffice::OnlyofficeController < ::ApplicationController
           customization: {
             forcesave: false,
           },
-        },
+        }.merge(
+          is_view ? {
+            coEditing: {
+              mode: "strict",
+              change: false,
+            },
+          } : {}
+        ),
       }
 
       if Onlyoffice::OnlyofficeJwt.enabled?
