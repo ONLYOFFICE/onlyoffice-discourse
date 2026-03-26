@@ -183,7 +183,8 @@ export default class OnlyofficeActionsModal extends Component {
       });
     }
 
-    if (convertFormats.length > 0) {
+    // Only show convert for authorized users
+    if (convertFormats.length > 0 && this.currentUser) {
       actions.push({
         id: "convert",
         labelKey: "onlyoffice_actions.convert",
