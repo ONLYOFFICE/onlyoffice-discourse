@@ -2,10 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { debounce } from "@ember/runloop";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class OnlyofficePermissionsModal extends Component {
+  @service modal;
   @tracked isLoading = true;
   @tracked selectedUserId = null;
   @tracked canEdit = true;
@@ -170,6 +172,20 @@ export default class OnlyofficePermissionsModal extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  @action
+  back() {
+    const modelData = this.args.model;    
+    this.args.closeModal();
+    
+    // Re-open the actions modal with all original model data
+    const modal = this.modal;
+    const OnlyofficeActionsModal = require("discourse/plugins/onlyoffice-discourse/discourse/components/modal/onlyoffice-actions-modal").default;
+    
+    modal.show(OnlyofficeActionsModal, {
+      model: { ...modelData },
+    });
   }
 
   @action

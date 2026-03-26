@@ -34,6 +34,12 @@
       class="btn-primary"
     />
     <DButton
+      @action={{this.back}}
+      @label="onlyoffice_convert.back"
+      @disabled={{this.isConverting}}
+      class="btn-flat"
+    />
+    <DButton
       @action={{this.cancel}}
       @label="cancel"
       @disabled={{this.isConverting}}

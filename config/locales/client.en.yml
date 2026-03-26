@@ -31,6 +31,7 @@ en:
       title: "Convert with ONLYOFFICE"
       select_format: "Select target format:"
       convert_button: "Convert"
+      back: "Back"
     onlyoffice_permissions:
       title: "Manage Document Permissions"
       add_user: "User exceptions"
@@ -44,6 +45,7 @@ en:
       remove: "Remove permission"
       can_edit: "Can Edit"
       close: "Close"
+      back: "Back"
       default_permissions: "Default Permissions"
       default_permissions_description: "Applies to all users by default. Can be overridden by specific permissions below."
       default_can_edit: "Allow editing for all users"

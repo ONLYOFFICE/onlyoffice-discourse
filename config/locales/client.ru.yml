@@ -31,6 +31,7 @@ ru:
       title: "Конвертация в ONLYOFFICE"
       select_format: "Выберите целевой формат:"
       convert_button: "Конвертировать"
+      back: "Назад"
     onlyoffice_permissions:
       title: "Управление правами доступа"
       add_user: "Исключения для пользователей"
@@ -44,6 +45,7 @@ ru:
       remove: "Удалить права"
       can_edit: "Может редактировать"
       close: "Закрыть"
+      back: "Назад"
       default_permissions: "Права по умолчанию"
       default_permissions_description: "Применяются ко всем пользователям по умолчанию. Могут быть переопределены конкретными правами ниже."
       default_can_edit: "Разрешить редактирование для всех пользователей"

@@ -220,9 +220,7 @@ export default class OnlyofficeActionsModal extends Component {
         this.args.closeModal();
         this.modal.show(OnlyofficeConvertModal, {
           model: {
-            filename: this.filename,
-            extension: this.extension,
-            uploadShortUrl: this.uploadShortUrl,
+            ...this.args.model,
             availableFormats: this.formatInfo?.convert || [],
           },
         });
@@ -230,12 +228,7 @@ export default class OnlyofficeActionsModal extends Component {
       permissions: () => {
         this.args.closeModal();
         this.modal.show(OnlyofficePermissionsModal, {
-          model: {
-            uploadId: this.uploadId,
-            uploadShortUrl: this.uploadShortUrl,
-            filename: this.filename,
-            postId: this.postId,
-          },
+          model: this.args.model,
         });
       },
     };

@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class OnlyofficeConvertModal extends Component {
+  @service modal;
   @tracked selectedFormat = null;
   @tracked isConverting = false;
 
@@ -60,6 +62,20 @@ export default class OnlyofficeConvertModal extends Component {
     } finally {
       this.isConverting = false;
     }
+  }
+
+  @action
+  back() {
+    const modelData = this.args.model;
+    this.args.closeModal();
+    
+    // Re-open the actions modal with all original model data
+    const modal = this.modal;
+    const OnlyofficeActionsModal = require("discourse/plugins/onlyoffice-discourse/discourse/components/modal/onlyoffice-actions-modal").default;
+    
+    modal.show(OnlyofficeActionsModal, {
+      model: { ...modelData },
+    });
   }
 
   @action
